@@ -1,0 +1,368 @@
+{
+  "awslogin": {
+    "frontend": {
+      "host": "localhost",
+      "port": 9401,
+      "address": "0.0.0.0",
+      "threads": 10,
+      "timeout": 30,
+      "root": "/usr/local/awsloginserver/frontend"
+    },
+    "backend": {
+      "threads": 10,
+      "otp": {
+        "key": "AA6MIN6FUJPUZXTS2P55WLAL2P4KPET4"
+      },
+      "onelogin": {
+        "subDomain": "libri",
+        "user": "jens.vogt@opitz-consulting.com",
+        "password": "Tea4TheTillerman",
+        "clientId": "9cbd7cb9c2df9555529656b575a7c191492a1e2dccf76c0bdfeed9615b529c72",
+        "clientSecret": "42616198c2e88714860cc18a08608662e6a586af53e4266a5c773653609fd82b",
+        "app-id": {
+          "int": 1571323,
+          "prod": 1557510
+        }
+      },
+      "aws": {
+        "region": "eu-central-1",
+        "session-period": 14400,
+        "secret-period": 3600,
+        "validation-period": 14400,
+        "credentials": "C:/Users/vogje01/.aws/credentials",
+        "account-id": {
+          "int": "226956876431",
+          "prod": "012096702153"
+        },
+        "exec": "C:/Program Files/Amazon/AWSCLIV2/aws.exe"
+      },
+      "kubernetes": {
+        "configfile": "C:/Users/vogje01/.kube/config",
+        "exec": "/usr/local/Kubernetes/kubectl.exe",
+        "clusters": [
+          {
+            "name": "pim-integration-eks",
+            "startcron": "0 0 3 ? * MON-FRI",
+            "endcron": "0 0 19 ? * MON-FRI",
+            "kubectl-context": "arn:aws:eks:eu-central-1:226956876431:cluster/pim-integration-eks"
+          },
+          {
+            "name": "pim-prod-eks",
+            "startcron": "",
+            "endcron": "",
+            "kubectl-context": "arn:aws:eks:eu-central-1:012096702153:cluster/pim-prod-eks"
+          }
+        ],
+        "forwarders": [
+          {
+            "name": "import-onix3-service",
+            "nameSpace": "pim-dev",
+            "type": "postgres",
+            "localPort": 5433,
+            "remotePort": 5433,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-ddd085fc-4310-45b1-892b-45935c087740",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "artikel-transformations-service",
+            "nameSpace": "pim-dev",
+            "type": "postgres",
+            "localPort": 5434,
+            "remotePort": 5434,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-d01a57b8-e3cf-4f00-8c47-319a7b03067c",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "datenlieferanten",
+            "nameSpace": "pim-dev",
+            "type": "postgres",
+            "localPort": 5435,
+            "remotePort": 5435,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-495c0bb6-856b-468f-a4f0-c1a6c269a967",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "import-image-service",
+            "nameSpace": "pim-dev",
+            "type": "postgres",
+            "localPort": 5436,
+            "remotePort": 5436,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-ad01fe16-2778-4d08-9942-a3634ff5f7bb",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "protokollierung-service",
+            "nameSpace": "pim-dev",
+            "type": "postgres",
+            "localPort": 5437,
+            "remotePort": 5437,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-2b308d2e-5779-4c0c-948b-032e0a9b5dbb",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "file-pickup",
+            "nameSpace": "pim-dev",
+            "type": "postgres",
+            "localPort": 5438,
+            "remotePort": 5438,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-54dfbd01-b39a-4052-9c0c-821d35c5bace",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "notification-center",
+            "nameSpace": "pim-dev",
+            "type": "postgres",
+            "localPort": 5439,
+            "remotePort": 5439,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-0d12e8e3-568a-4074-8583-491b83368f8e",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "opensearch",
+            "nameSpace": "pim-dev",
+            "type": "opensearch",
+            "localPort": 10080,
+            "remotePort": 10080,
+            "clusterPort": 80,
+            "active": true,
+            "secret": "",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "katalogdaten-db",
+            "nameSpace": "pim-dev",
+            "type": "mongo",
+            "localPort": 27018,
+            "remotePort": 27018,
+            "clusterPort": 27017,
+            "active": true,
+            "secret": "pim-dev-katalogdaten-db-secret",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.docdb.amazonaws.com"
+          },
+          {
+            "name": "import-onix3-service",
+            "nameSpace": "pim-int",
+            "type": "postgres",
+            "localPort": 6433,
+            "remotePort": 6433,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-9f7a23cb-6d0d-4b57-80e7-00d8bd919f6d",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "artikel-transformations-service",
+            "nameSpace": "pim-int",
+            "type": "postgres",
+            "localPort": 6434,
+            "remotePort": 6434,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-3f73ffd3-4dfb-4983-af9c-590624d3c480",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "datenlieferanten",
+            "nameSpace": "pim-int",
+            "type": "postgres",
+            "localPort": 6435,
+            "remotePort": 6435,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-68e50d2e-44c7-47c2-80e8-2dd4854aaecb",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "import-image-service",
+            "nameSpace": "pim-int",
+            "type": "postgres",
+            "localPort": 6436,
+            "remotePort": 6436,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-b291436a-52f9-4fb7-84a0-204e44f59455",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "protokollierung-service",
+            "nameSpace": "pim-int",
+            "type": "postgres",
+            "localPort": 6437,
+            "remotePort": 6437,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-43d124f5-5327-404c-a3d0-a6bcb49c307b",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "file-pickup",
+            "nameSpace": "pim-int",
+            "type": "postgres",
+            "localPort": 6438,
+            "remotePort": 6438,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-d40544bd-5b4e-49a3-ae19-1be5ee120f94",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "notification-center",
+            "nameSpace": "pim-int",
+            "type": "postgres",
+            "localPort": 6439,
+            "remotePort": 6439,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-6ee6e98b-2851-4e20-b2ed-1f9913c89e8e",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "opensearch",
+            "nameSpace": "pim-int",
+            "type": "opensearch",
+            "localPort": 10180,
+            "remotePort": 10180,
+            "clusterPort": 80,
+            "active": true,
+            "secret": "",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "katalogdaten-db",
+            "nameSpace": "pim-int",
+            "type": "mongo",
+            "localPort": 28018,
+            "remotePort": 28018,
+            "clusterPort": 27017,
+            "active": true,
+            "secret": "pim-int-katalogdaten-db-secret",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.docdb.amazonaws.com"
+          },
+          {
+            "name": "import-onix3-service",
+            "nameSpace": "pim-prod",
+            "type": "postgres",
+            "localPort": 7433,
+            "remotePort": 7433,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-e5c7a007-9645-4884-a39e-07fa7df6a6dd",
+            "cluster": "cluster-chx4vyuv4cxe.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "artikel-transformations-service",
+            "nameSpace": "pim-prod",
+            "type": "postgres",
+            "localPort": 7434,
+            "remotePort": 7434,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-700517ae-6fdd-418b-b132-186f24709a23",
+            "cluster": "cluster-chx4vyuv4cxe.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "datenlieferanten",
+            "nameSpace": "pim-prod",
+            "type": "postgres",
+            "localPort": 7435,
+            "remotePort": 7435,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-dd5358f7-3995-4788-978d-8712f908c602",
+            "cluster": "cluster-chx4vyuv4cxe.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "import-image-service",
+            "nameSpace": "pim-prod",
+            "type": "postgres",
+            "localPort": 7436,
+            "remotePort": 7436,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-d5f69ee5-dd40-452f-a018-1a34b79c1b3c",
+            "cluster": "cluster-chx4vyuv4cxe.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "protokollierung-service",
+            "nameSpace": "pim-prod",
+            "type": "postgres",
+            "localPort": 7437,
+            "remotePort": 7437,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-55b4d14b-d459-479d-b57a-558bf8390b09",
+            "cluster": "cluster-chx4vyuv4cxe.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "file-pickup",
+            "nameSpace": "pim-prod",
+            "type": "postgres",
+            "localPort": 7438,
+            "remotePort": 7438,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-53670bdb-c091-4a07-abf2-2c3278524419",
+            "cluster": "cluster-chx4vyuv4cxe.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "notification-center",
+            "nameSpace": "pim-prod",
+            "type": "postgres",
+            "localPort": 7439,
+            "remotePort": 7439,
+            "clusterPort": 5432,
+            "active": true,
+            "secret": "rds!cluster-89d8b629-88e0-4a83-a805-c2efc568df61",
+            "cluster": "cluster-chx4vyuv4cxe.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "opensearch",
+            "nameSpace": "pim-prod",
+            "type": "opensearch",
+            "localPort": 10280,
+            "remotePort": 10280,
+            "clusterPort": 80,
+            "active": true,
+            "secret": "",
+            "cluster": "cluster-chx4vyuv4cxe.eu-central-1.rds.amazonaws.com"
+          },
+          {
+            "name": "katalogdaten-db",
+            "nameSpace": "pim-prod",
+            "type": "mongo",
+            "localPort": 29018,
+            "remotePort": 29018,
+            "clusterPort": 27017,
+            "active": true,
+            "secret": "pim-prod-katalogdaten-db-secret",
+            "cluster": "cluster-cevugimly6tg.eu-central-1.docdb.amazonaws.com"
+          }
+        ]
+      }
+    },
+    "workbench": {
+      "configuration": "C:/Users/vogje01/.sqlworkbench/wb-profiles.properties"
+    },
+    "logging": {
+      "dir": "/usr/local/awsloginserver/log/",
+      "prefix": "awsloginserver",
+      "size": 10485760,
+      "count": 5,
+      "level": "debug"
+    }
+  }
+}
