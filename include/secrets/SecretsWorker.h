@@ -48,11 +48,11 @@ public slots:
     /**
      * @brief Synchronize secrets
      */
-    void DoWork();
+    //void DoWork();
 
     void Shutdown() const;
 
-    void GetPasswords(const QString &awsAccount, const Aws::STS::Model::Credentials &credentials) const;
+    void GetPasswords(const QString &awsAccount, const QString &nameSpace, const Aws::STS::Model::Credentials &credentials) const;
 
 signals:
     void finished();

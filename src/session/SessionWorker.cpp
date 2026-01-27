@@ -33,7 +33,7 @@ void SessionWorker::DoWork(const QString &awsAccount, const QString &nameSpace) 
         _kubernetesWorker = new KubernetesWorker();
 
     // Get AWS session token
-    _awsUtils->GetAwsSessionToken(awsAccount);
+    _awsUtils->GetAwsSessionToken(awsAccount, nameSpace);
 
     connect(_awsUtils, &AwsUtils::GetAwsCredentialsSignal, _secretsWorker, &SecretsWorker::GetPasswords);
     connect(_awsUtils, &AwsUtils::GetAwsCredentialsSignal, _kubernetesWorker, &KubernetesWorker::DoWork);

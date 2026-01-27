@@ -14,31 +14,15 @@ void KubernetesWorker::Shutdown() const {
     _kubernetesUtils->StopForwarder();
 }
 
-void KubernetesWorker::DoWork(const QString &awsAccount, const Aws::STS::Model::Credentials &credentials) const {
+void KubernetesWorker::DoWork(const QString &awsAccount, const QString &nameSpace, const Aws::STS::Model::Credentials &credentials) const {
 
-    CheckPods(awsAccount);
-}
-
-void KubernetesWorker::CheckPods(const QString &awsAccount) const {
-
-    log_info("Check PODs starting");
-    QVector<QString> nameSpaces;
-    if (awsAccount == "pim-prod") {
-        nameSpaces.push_back("pim-prod");
+    if (!_kubernetesUtils->PodExists(awsAccount, nameSpace, nameSpace + _suffix)) {
+        log_warning("Forwarder POD not found, nameSpace: " + nameSpace);
+        StartForwarderPod(awsAccount, nameSpace);
     } else {
-        nameSpaces.push_back("pim-dev");
-        nameSpaces.push_back("pim-int");
+        log_info("Forwarder POD found, nameSpace: " + nameSpace);
     }
-
-    for (const auto &nameSpace: nameSpaces) {
-        if (!_kubernetesUtils->PodExists(awsAccount, nameSpace, nameSpace + _suffix)) {
-            log_warning("Forwarder POD not found, nameSpace: " + nameSpace);
-            StartForwarderPod(awsAccount, nameSpace);
-        } else {
-            log_info("Forwarder POD found, nameSpace: " + nameSpace);
-        }
-        _kubernetesUtils->StartForwarder(awsAccount, nameSpace, GetPortList(nameSpace));
-    }
+    _kubernetesUtils->StartForwarder(awsAccount, nameSpace, GetPortList(nameSpace));
 }
 
 QStringList KubernetesWorker::GetPortList(const QString &nameSpace) {

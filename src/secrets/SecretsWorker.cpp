@@ -4,8 +4,6 @@
 
 #include <secrets/SecretsWorker.h>
 
-#include "kubernetes/KubernetesWorker.h"
-
 SecretsWorker::SecretsWorker(QString nameSpace) : _nameSpace(std::move(nameSpace)), _awsUtils(nullptr), _kubernetesUtils(nullptr), _restManager(nullptr) {
 
     if (_nameSpace == "pim-prod") {
@@ -22,23 +20,7 @@ void SecretsWorker::Shutdown() const {
     delete _kubernetesUtils;
 }
 
-void SecretsWorker::DoWork() {
-
-    if (!_restManager)
-        _restManager = new RestManager(this);
-    if (!_awsUtils)
-        _awsUtils = new AwsUtils(_restManager, this);
-    if (!_kubernetesUtils)
-        _kubernetesUtils = new KubernetesWorker();
-
-    // Get AWS session token
-    _awsUtils->GetAwsSessionToken(_awsAccount);
-
-    connect(_awsUtils, &AwsUtils::GetAwsCredentialsSignal, this, &SecretsWorker::GetPasswords);
-    connect(_awsUtils, &AwsUtils::GetAwsCredentialsSignal, _kubernetesUtils, &KubernetesWorker::DoWork);
-}
-
-void SecretsWorker::GetPasswords(const QString &awsAccount, const Aws::STS::Model::Credentials &credentials) const {
+void SecretsWorker::GetPasswords(const QString &awsAccount, const QString &nameSpace, const Aws::STS::Model::Credentials &credentials) const {
 
     const auto ssmCredentials = Aws::Auth::AWSCredentials(credentials.GetAccessKeyId(), credentials.GetSecretAccessKey(), credentials.GetSessionToken());
 
@@ -50,7 +32,7 @@ void SecretsWorker::GetPasswords(const QString &awsAccount, const Aws::STS::Mode
     const Aws::SecretsManager::SecretsManagerClient ssmClient(ssmCredentials, clientConfig);
     log_info("Secretsmanager initialized, region: " + _region);
 
-    for (QVector forwarders = Configuration::instance().GetForwarderConfigs(_nameSpace); const auto &forwarder: forwarders) {
+    for (QVector forwarders = Configuration::instance().GetForwarderConfigs(nameSpace); const auto &forwarder: forwarders) {
 
         // We do not have passwords for opensearch
         if (forwarder.type == "opensearch") {
@@ -61,7 +43,7 @@ void SecretsWorker::GetPasswords(const QString &awsAccount, const Aws::STS::Mode
         QString secret = GetSecretFromAws(ssmClient, forwarder.secret);
         Configuration::instance().SetKubernetesPassword(_nameSpace, forwarder.name, GetPassword(secret));
         Configuration::instance().SetKubernetesUsername(_nameSpace, forwarder.name, GetUsername(secret));
-        log_info(_nameSpace + ":" + forwarder.name + ", password: " + GetPassword(secret));
+        log_info(nameSpace + ":" + forwarder.name + ", password: " + GetPassword(secret));
     }
     Configuration::instance().WriteConfigurationFile();
     WriteWorkbenchConfig();

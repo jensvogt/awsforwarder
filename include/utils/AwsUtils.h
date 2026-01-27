@@ -44,18 +44,20 @@ public:
      * @brief Get the AWS credentials
      *
      * @param awsAccount AWS account
+     * @param nameSpace
      * @return AWS credentials
      */
-    void GetAwsSessionToken(const QString &awsAccount);
+    void GetAwsSessionToken(const QString &awsAccount, const QString &nameSpace);
 
 signals:
     /**
      * @brief Signaled when an access token is available
      *
      * @param awsAccount AWS account, either pim-int or pim-prod
+     * @param nameSpace AWS name space
      * @param credentials AWS credentials
      */
-    void GetAwsCredentialsSignal(const QString &awsAccount, const Aws::STS::Model::Credentials &credentials);
+    void GetAwsCredentialsSignal(const QString &awsAccount, const QString &nameSpace, const Aws::STS::Model::Credentials &credentials);
 
 private:
     /**

@@ -4,7 +4,7 @@
 
 #include <utils/AwsUtils.h>
 
-void AwsUtils::GetAwsSessionToken(const QString &awsAccount) {
+void AwsUtils::GetAwsSessionToken(const QString &awsAccount, const QString &nameSpace) {
 
     const auto region = Configuration::instance().GetValue<QString>("aws.region");
     const int timeout = Configuration::instance().GetValue<int>("aws.validation-period");
@@ -12,7 +12,7 @@ void AwsUtils::GetAwsSessionToken(const QString &awsAccount) {
     // Get the OneLogin SAML assertion XML
     _oneloginUtils->GetAccessToken(awsAccount);
 
-    connect(_oneloginUtils, &OneLoginUtils::GetAccessTokenSignal, this, [this, region, timeout](const QString &account, const QString &accessToken) {
+    connect(_oneloginUtils, &OneLoginUtils::GetAccessTokenSignal, this, [this, region, nameSpace, timeout](const QString &account, const QString &accessToken) {
 
         // Get the AWS role ARN
         if (const QVector<QString> roleArn = GetRoleArn(accessToken); roleArn.isEmpty()) {
@@ -39,7 +39,7 @@ void AwsUtils::GetAwsSessionToken(const QString &awsAccount) {
                 WriteAwsCredentialsFile(account, outcome);
                 WriteKubernetesConfig(account, outcome);
                 _credentials[account] = outcome.GetResult().GetCredentials();
-                emit GetAwsCredentialsSignal(account, outcome.GetResult().GetCredentials());
+                emit GetAwsCredentialsSignal(account, nameSpace, outcome.GetResult().GetCredentials());
             }
         }
     });

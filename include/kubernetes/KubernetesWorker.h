@@ -25,7 +25,7 @@ public slots:
     /**
      * @brief Threads main loop
      */
-    void DoWork(const QString &awsAccount, const Aws::STS::Model::Credentials &credentials) const;
+    void DoWork(const QString &awsAccount, const QString &nameSpace, const Aws::STS::Model::Credentials &credentials) const;
 
     /**
      * Shutdown worker
@@ -33,7 +33,7 @@ public slots:
     void Shutdown() const;
 
 private:
-    void CheckPods(const QString &awsAccount) const;
+    //void CheckPods(const QString &awsAccount) const;
 
     static QStringList GetPortList(const QString &nameSpace);
 
