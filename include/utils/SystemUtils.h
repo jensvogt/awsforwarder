@@ -89,6 +89,13 @@ public:
     }
 
     static long FindProcessByName(const QString &fullName) {
+#ifdef _WIN32
+        QProcess p;
+        p.start("tasklist", {"/FI", "IMAGENAME eq mytool.exe"});
+        p.waitForFinished();
+
+        bool running = p.readAllStandardOutput().contains("mytool.exe");
+#else
         QProcess p;
         p.start("pgrep", QStringList() << fullName);
         p.waitForFinished();
@@ -96,13 +103,11 @@ public:
             return -1;
         }
         return p.readAllStandardOutput().toLongLong();
+#endif
     }
 
     static long ProcessExistsByName(const QString &fullName) {
-        QProcess p;
-        p.start("pgrep", QStringList() << fullName);
-        p.waitForFinished();
-        return !p.readAllStandardOutput().isEmpty();
+        return FindProcessByName(fullName) > 0;
     }
 
     static QString KillProcessByName(const QString &fullName) {
