@@ -14,7 +14,7 @@
 //#include "ForwarderConfig.h"
 
 #ifdef _WIN32
-#define DEFAULT_CONFIGURATION_FILE_PATH QString("C:\\Program Files\\awsloginserver\\awsloginserver.json")
+#define DEFAULT_CONFIGURATION_FILE_PATH QString("C:\\Program Files\\awsforwarder\\awsforwarder.json")
 #else
 #define DEFAULT_CONFIGURATION_FILE_PATH QString("/usr/local/awsforwarder/etc/awsforwarder.json")
 #endif

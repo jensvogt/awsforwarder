@@ -4,8 +4,8 @@
       "int": "2801765850",
       "prod": "28081765847"
     },
-    "credentials": "/home/vogje01/.aws/credentials",
-    "exec": "/usr/local/bin/aws",
+    "credentials": "C:\\Users\\jensv\\.aws\\credentials",
+    "exec": "C:\\Program Files\\Amazon\\AWSCLIV2\\aws.exe",
     "region": "eu-central-1",
     "secret-period": 3600,
     "session-period": 14400,
@@ -28,8 +28,8 @@
         "startCron": ""
       }
     ],
-    "config-file": "/home/vogje01/.kube/config",
-    "exec": "/usr/local/bin/kubectl",
+    "config-file": "C:\\Users\\jensv\\.kube\\config",
+    "exec": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.exe",
     "forwarder-image": "ghcr.io/david-lor/portforward:latest",
     "forwarders": [
       {
@@ -537,5 +537,5 @@
   },
   "style": "Fusion",
   "style-type": "dark",
-  "workbench-configuration": "/home/vogje01/.sqlworkbench/wb-profiles.properties"
+  "workbench-configuration": "C:\\Users\\jensv\\.sqlworkbench\\wb-profiles.properties"
 }

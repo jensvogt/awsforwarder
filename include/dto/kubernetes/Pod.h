@@ -10,8 +10,7 @@
 #include <QVector>
 #include <QJsonDocument>
 
-// AwsLogin includes
-#include <boost/json/impl/object.hpp>
+// Forwarder includes
 #include <dto/kubernetes/ObjectMeta.h>
 #include <dto/kubernetes/PodSpec.h>
 

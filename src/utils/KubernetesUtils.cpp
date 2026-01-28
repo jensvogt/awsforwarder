@@ -19,29 +19,6 @@ void KubernetesUtils::StopForwarder() const {
     _systemUtils->StopProcesses();
 }
 
-void KubernetesUtils::GetPodList(const QString &nameSpace) {
-
-    SetCurrentContext(nameSpace);
-
-    const QString kubeCtlCmd = Configuration::instance().GetKubeCtlExecutable();
-    const QString cmd = kubeCtlCmd + " get pod --output json -n " + nameSpace;
-
-    FILE *pipe = popen(cmd.toUtf8().constData(), "r");
-    if (!pipe) {
-        log_error("Failed to run GetPodList, nameSpace: " + nameSpace);
-    }
-
-    QByteArray output;
-    char buffer[256];
-    while (fgets(buffer, sizeof(buffer), pipe))
-        output += buffer;
-
-    pclose(pipe);
-
-    const QJsonDocument doc = QJsonDocument::fromJson(output);
-    //JsonUtils::WriteJsonString(doc.object());
-}
-
 bool KubernetesUtils::PodExists(const QString &awsAccount, const QString &nameSpace, const QString &podName) const {
 
     const QString kubeCtlCmd = Configuration::instance().GetKubeCtlExecutable();

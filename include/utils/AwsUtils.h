@@ -14,8 +14,9 @@
 #include <QXmlStreamReader>
 
 #ifdef _WIN32
-#define USE_IMPORT_EXPORT
-#define USE_WINDOWS_DLL_SEMANTICS
+//#define USE_IMPORT_EXPORT
+//#define USE_WINDOWS_DLL_SEMANTICS
+#define YAML_CPP_API
 #endif
 
 // AWS includes

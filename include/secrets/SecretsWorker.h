@@ -17,6 +17,7 @@
 #include <aws/core/auth/AWSCredentialsProvider.h>
 #include <aws/secretsmanager/SecretsManagerClient.h>
 #include <aws/secretsmanager/model/GetSecretValueRequest.h>
+
 // Forwarder includes
 #include <utils/LoggingUtils.h>
 #include <utils/AwsUtils.h>

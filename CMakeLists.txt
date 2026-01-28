@@ -1,5 +1,19 @@
 cmake_minimum_required(VERSION 3.28)
-project(awsforwarder)
+
+# Read version.txt
+include(cmake/ReadVersion.cmake)
+include(cmake/UpdateXmlVersion.cmake)
+include(cmake/UpdateReleaseDate.cmake)
+
+project(awsforwarder VERSION ${VERSION_STRING} LANGUAGES CXX)
+
+message(STATUS "Configured version: ${PROJECT_VERSION}")
+
+# Export version to source code
+configure_file(${CMAKE_SOURCE_DIR}/cmake/version.h.in ${CMAKE_SOURCE_DIR}/include/Version.h)
+update_xml_version("${CMAKE_SOURCE_DIR}/installer/config/config.xml" "${VERSION_STRING}" "Version")
+update_xml_version("${CMAKE_SOURCE_DIR}/installer/packages/de.jensvogt.awsmockqtui/meta/package.xml" "${VERSION_STRING}" "Version")
+update_release_date("${CMAKE_SOURCE_DIR}/installer/packages/de.jensvogt.awsmockqtui/meta/package.xml")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTOMOC ON)
@@ -7,23 +21,33 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 if (WIN32)
-    set(INSTALL_DIR "C:/Program Files (x86)/awsloginserver")
-    set(BOOST_INCLUDE_DIRS "C:/Program Files (x86)/boost/boost_1_89_0")
-    set(BOOST_LIB_DIRS "C:/Program Files (x86)/boost/boost_1_89_0/lib64-msvc-14.3")
-    set(AWSSDK_INCLUDE_DEBUG_DIRS "c:/Program Files (x86)/aws-sdk-cpp/debug/include")
-    set(AWSSDK_LIB_DEBUG_DIRS "c:/Program Files (x86)/aws-sdk-cpp/debug/bin")
-    set(AWSSDK_INCLUDE_RELEASE_DIRS "c:/Program Files (x86)/aws-sdk-cpp/release/include")
-    set(AWSSDK_LIB_RELEASE_DIRS "c:/Program Files (x86)/aws-sdk-cpp/release/bin")
-    set(LIBSSL_INCLUDE_DIRS "C:/Program Files (x86)/OpenSSL-Win64/include")
-    set(LIBSSL_LIB_DIRS "C:/Program Files (x86)/OpenSSL-Win64/lib/VC/x64/MT")
+    add_compile_options(/Zc:__cplusplus)
+    set(CMAKE_CXX_STANDARD 20)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_CXX_EXTENSIONS OFF)
+    set(CMAKE_PREFIX_PATH "c:\\work\\private\\Qt\\6.10.1\\msvc2022_64")
+    set(CMAKE_PREFIX_PATH "C:\\work\\private\\extern\\vcpkg\\installed\\x64-windows")
+    set(INSTALL_DIR "C:/Program Files (x86)/awsforwarder")
+    set(AWSSDK_INCLUDE_DIR "C:/Program Files (x86)/aws-cpp-sdk-all/include")
+    set(AWSSDK_LIB_DIR "C:/Program Files (x86)/aws-cpp-sdk-all/bin")
+    set(LIBSSL_INCLUDE_DIR "C:/Program Files (x86)/OpenSSL-Win64/include")
+    set(LIBSSL_LIB_DIR "C:/Program Files (x86)/OpenSSL-Win64/lib/VC/x64/MT")
+    set(YAML_CPP_INCLUDE_DIR "C:/Program Files (x86)/YAML_CPP/include")
+    set(YAML_CPP_LIB_DIR "C:/Program Files (x86)/YAML_CPP/lib")
+    set(WINDOWS_ICON ${CMAKE_SOURCE_DIR}/appicon.rc)
+    set(APP_ICON_RESOURCE_WINDOWS "${WINDOWS_ICON}")
 else ()
     set(EXTERNAL_LIB_DIR /usr/local/lib)
     set(EXTERNAL_INC_DIR /usr/local/include)
 endif ()
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Network Xml)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Svg Network Xml)
+find_package(AWSSDK CONFIG REQUIRED COMPONENTS core secretsmanager sts eks)
+find_package(yaml-cpp CONFIG REQUIRED)
 
 qt_add_resources(APP_RESOURCES resources/awsforwarder.qrc)
+#qt_add_executable(awsforwarder MANUAL_FINALIZATION ${PROJECT_SOURCES} ${APP_ICON_RESOURCE_WINDOWS} ${APP_RESOURCES})
+
 set(PROJECT_SOURCES
         src/main.cpp
         src/utils/IconUtils.cpp
@@ -85,9 +109,21 @@ set(PROJECT_SOURCES
 
 qt_add_executable(awsforwarder MANUAL_FINALIZATION ${PROJECT_SOURCES} ${APP_ICON_RESOURCE_WINDOWS} ${APP_RESOURCES})
 
-target_link_libraries(awsforwarder PRIVATE Qt::Core Qt::Gui Qt::Widgets Qt6::Network Qt6::Xml aws-cpp-sdk-sts aws-cpp-sdk-core aws-cpp-sdk-eks
-        aws-cpp-sdk-secretsmanager yaml-cpp)
-target_link_directories(awsforwarder PRIVATE ${EXTERNAL_INC_DIR})
-target_include_directories(awsforwarder PRIVATE ./include ${EXTERNAL_INC_DIR} Qt6::Network Qt6::Xml)
+target_link_libraries(awsforwarder PRIVATE Qt::Core Qt::Gui Qt::Widgets Qt6::Network Qt6::Xml ${AWSSDK_LIBRARIES} yaml-cpp::yaml-cpp)
+target_include_directories(awsforwarder PRIVATE ./include ${AWSSDK_INCLUDE_DIRS})
+
+set_target_properties(awsforwarder PROPERTIES MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}"
+        MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}" MACOSX_BUNDLE TRUE
+        WIN32_EXECUTABLE TRUE)
+
+if (WIN32)
+    install(TARGETS awsforwarder BUNDLE DESTINATION . LIBRARY DESTINATION ${CMAKE_INSTALL_DIR} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+else ()
+    include(GNUInstallDirs)
+    install(TARGETS awsforwarder BUNDLE DESTINATION . LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    # Generate the deployment script for the target MyApp.
+    qt_generate_deploy_app_script(TARGET awsforwarder OUTPUT_SCRIPT deploy_script NO_UNSUPPORTED_PLATFORM_ERROR)
+    install(SCRIPT ${deploy_script})
+endif ()
 
 qt_finalize_executable(awsforwarder)

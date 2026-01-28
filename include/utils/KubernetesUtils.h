@@ -109,9 +109,7 @@ public:
         return {};
     }
 
-    static void GetPodList(const QString &nameSpace);
-
-    bool PodExists(const QString &awsAccount, const QString &nameSpace, const QString &podName) const;
+    [[nodiscard]] bool PodExists(const QString &awsAccount, const QString &nameSpace, const QString &podName) const;
 
     static Pod CreatePodDto(const QString &nameSpace, const QString &podName, const QString &imageName);
 
@@ -125,7 +123,7 @@ public:
 
         const QString awsCmd = Configuration::instance().GetAwsExecutable();
         const QString cmd = awsCmd + " --region eu-central-1 eks get-token --cluster-name " + clusterName + " --output json";
-
+#ifndef _WIN32
         FILE *pipe = popen(cmd.toUtf8().constData(), "r");
         if (!pipe) {
             log_error("Failed to run aws eks get-token, clusterName: " + clusterName + " failed.");
@@ -140,7 +138,9 @@ public:
 
         const QJsonDocument doc = QJsonDocument::fromJson(output);
         return doc["status"]["token"].toString();
-
+#else
+        return {};
+#endif
     }
 
 private:
