@@ -46,7 +46,6 @@ find_package(AWSSDK CONFIG REQUIRED COMPONENTS core secretsmanager sts eks)
 find_package(yaml-cpp CONFIG REQUIRED)
 
 qt_add_resources(APP_RESOURCES resources/awsforwarder.qrc)
-#qt_add_executable(awsforwarder MANUAL_FINALIZATION ${PROJECT_SOURCES} ${APP_ICON_RESOURCE_WINDOWS} ${APP_RESOURCES})
 
 set(PROJECT_SOURCES
         src/main.cpp
