@@ -50,6 +50,7 @@ jobs:
       BUILD_DIR: "${{ github.workspace }}\\build-windows"
       INSTALLER_DIR: "${{ github.workspace }}\\installer"
       SEMVER: "${{ needs.release-please.outputs.tag_name }}"
+      VCPKG_DEFAULT_TRIPLET: x64-windows-static
     steps:
       - name: Checkout
         uses: actions/checkout@v4
