@@ -91,8 +91,8 @@ jobs:
 
       - name: Install vcpkg dependencies
         run: |
-          vcpkg install aws-sdk-cpp[core,secretsmanager,sts,eks]:${{ env.VCPKG_DEFAULT_TRIPLET }}
-          vcpkg install yaml-cpp:${{ env.VCPKG_DEFAULT_TRIPLET }}
+          vcpkg --vcpkg-root ${{ env.VCPKG_ROOT }} install aws-sdk-cpp[core,secretsmanager,sts,eks]:${{ env.VCPKG_DEFAULT_TRIPLET }}
+          vcpkg --vcpkg-root ${{ env.VCPKG_ROOT }} install yaml-cpp:${{ env.VCPKG_DEFAULT_TRIPLET }}
 
       - name: Install Python & aqtinstall
         shell: powershell
