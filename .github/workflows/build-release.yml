@@ -164,6 +164,7 @@ jobs:
       SEMVER: "${{ needs.release-please.outputs.tag_name }}"
       INSTALLER_DIR: "${{ github.workspace }}/installer"
       APP_NAME: "awsforwarder"
+      VCPKG_DEFAULT_TRIPLET: x64-windows-static
     steps:
       - name: Checkout
         uses: actions/checkout@v4
