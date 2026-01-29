@@ -97,7 +97,7 @@ jobs:
       - name: Configure CMake
         shell: powershell
         run: |
-          cmake -S . -B $env:BUILD_DIR -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_PREFIX_PATH="$env:QT_DIR\$env:QT_VERSION\msvc2022_64"
+          cmake -S . -B ${{env.BUILD_DIR}} -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_PREFIX_PATH="${{env.QT_DIR}}\${{env.QT_VERSION}}\msvc2022_64"
 
       - name: Build
         shell: powershell
@@ -120,8 +120,7 @@ jobs:
       - name: Build Qt Installer Framework installer
         shell: powershell
         run: |
-          $ifw = Get-ChildItem "$env:QT_DIR\Tools\QtInstallerFramework" -Directory |
-                 Sort-Object Name -Descending | Select-Object -First 1
+          $ifw = Get-ChildItem "$env:QT_DIR\Tools\QtInstallerFramework" -Directory | Sort-Object Name -Descending | Select-Object -First 1
           $env:PATH = "$($ifw.FullName)\bin;$env:PATH"
           binarycreator -c "$env:INSTALLER_DIR\config\config.xml" -p "$env:INSTALLER_DIR\packages" "$env:INSTALLER_DIR\$env:APP_NAME-$env:SEMVER-windows.exe"
 
