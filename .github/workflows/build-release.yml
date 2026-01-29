@@ -97,7 +97,7 @@ jobs:
       - name: Configure CMake
         shell: powershell
         run: |
-          cmake -S . -B $env:BUILD_DIR -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows -DQt6_DIR="$env:QT_DIR\$env:QT_VERSION\msvc2022_64\lib\cmake\Qt6"
+          cmake -S . -B $env:BUILD_DIR -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_PREFIX_PATH="$env:QT_DIR\$env:QT_VERSION\msvc2022_64"
 
       - name: Build
         shell: powershell
