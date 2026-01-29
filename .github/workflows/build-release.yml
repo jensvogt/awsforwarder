@@ -8,7 +8,7 @@ on:
 env:
   QT_VERSION: "6.10.1"
   APP_NAME: "awsforwarder"        # change if different
-  INSTALLER_ID: "de.jensvogt.awsmockqtui" # used for IFW package path
+  INSTALLER_ID: "de.jensvogt.awsforwarder" # used for IFW package path
 
 permissions:
   contents: write       # required for tagging + releasing

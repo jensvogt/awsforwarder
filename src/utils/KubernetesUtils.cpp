@@ -5,9 +5,9 @@
 #include <utils/KubernetesUtils.h>
 
 KubernetesUtils::KubernetesUtils(RestManager *restManager) : _kubernetesService(nullptr) {
-
-    _kubernetesService = new KubernetesService(restManager);
     _systemUtils = new SystemUtils();
+    _suffix = Configuration::instance().GetForwarderSuffix();
+    _kubernetesService = new KubernetesService(restManager);
 }
 
 KubernetesUtils::~KubernetesUtils() {
@@ -20,7 +20,6 @@ void KubernetesUtils::StopForwarder() const {
 }
 
 bool KubernetesUtils::PodExists(const QString &awsAccount, const QString &nameSpace, const QString &podName) const {
-
     const QString kubeCtlCmd = Configuration::instance().GetKubeCtlExecutable();
     const QString context = Configuration::instance().GetClusterArn(awsAccount);
 
@@ -33,7 +32,6 @@ bool KubernetesUtils::PodExists(const QString &awsAccount, const QString &nameSp
 }
 
 void KubernetesUtils::StartForwarder(const QString &awsAccount, const QString &nameSpace, const QVector<QString> &ports) const {
-
     const QString kubeCtlCmd = Configuration::instance().GetKubeCtlExecutable();
     const QString kubernetesConfig = Configuration::instance().GetKubernetesConfigFile();
     const QString context = Configuration::instance().GetClusterArn(awsAccount);
@@ -48,18 +46,19 @@ void KubernetesUtils::StartForwarder(const QString &awsAccount, const QString &n
 }
 
 void KubernetesUtils::StartForwarderPod(const QString &awsAccount, const QString &nameSpace, const QString &fileName) const {
-
     const QString kubeCtlCmd = Configuration::instance().GetKubeCtlExecutable();
     const QString kubernetesConfig = Configuration::instance().GetKubernetesConfigFile();
     const QString context = Configuration::instance().GetClusterArn(awsAccount);
 
-    const QStringList args{"--context", context, "create", "-f", fileName, "--kubeconfig", kubernetesConfig, "--namespace", nameSpace};
-    const RunCommandResult result = _systemUtils->RunCommandSync(kubeCtlCmd, args);
-    log_info("PortForwarder started, nameSpace: " + nameSpace + ", exitCode: " + QString::number(result.exitCode));
+    QStringList args{"--context", context, "create", "-f", fileName, "--kubeconfig", kubernetesConfig, "--namespace", nameSpace};
+    const RunCommandResult createResult = _systemUtils->RunCommandSync(kubeCtlCmd, args);
+    log_info("PortForwarder started, waiting to be ready, nameSpace: " + nameSpace + ", exitCode: " + QString::number(createResult.exitCode));
+    args = QStringList{"--context", context, "wait", "pod/" + nameSpace + _suffix, "--kubeconfig", kubernetesConfig, "--namespace", nameSpace};
+    const RunCommandResult waitResult = _systemUtils->RunCommandSync(kubeCtlCmd, args);
+    log_info("PortForwarder ready, nameSpace: " + nameSpace + ", exitCode: " + QString::number(createResult.exitCode));
 }
 
 Pod KubernetesUtils::CreatePodDto(const QString &nameSpace, const QString &podName, const QString &imageName) {
-
     // Create Pod
     Pod pod;
     pod.apiVersion = "v1";

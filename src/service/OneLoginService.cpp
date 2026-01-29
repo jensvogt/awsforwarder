@@ -1,4 +1,4 @@
-#include <utils/OneLoginService.h>
+#include <service/OneLoginService.h>
 
 void OneLoginService::GetAccessToken(const QString &host, const QString &path, const QString &body, const QMap<QString, QString> &headers) {
     QElapsedTimer timer;

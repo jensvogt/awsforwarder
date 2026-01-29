@@ -2,7 +2,7 @@
 // Created by vogje01 on 1/24/26.
 //
 
-#include <utils/KubernetesService.h>
+#include <service/KubernetesService.h>
 
 void KubernetesService::GetPodList(const QString &nameSpace, const QString &endpoint, const QMap<QString, QString> &headers, const QSslConfiguration &sslConfiguration) const {
 

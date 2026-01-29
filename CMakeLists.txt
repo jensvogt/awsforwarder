@@ -78,8 +78,8 @@ set(PROJECT_SOURCES
         include/utils/BaseService.h
         include/utils/RestManager.h
         src/utils/RestManager.cpp
-        include/utils/OneLoginService.h
-        src/utils/OneLoginService.cpp
+        include/service/OneLoginService.h
+        src/service/OneLoginService.cpp
         include/utils/LoggingUtils.h
         include/secrets/SecretsWorker.h
         src/secrets/SecretsWorker.cpp
@@ -89,8 +89,8 @@ set(PROJECT_SOURCES
         include/MainWindow.h
         src/MainWindow.cpp
         include/utils/KubernetesUtils.h
-        include/utils/KubernetesService.h
-        src/utils/KubernetesService.cpp
+        include/service/KubernetesService.h
+        src/service/KubernetesService.cpp
         src/utils/KubernetesUtils.cpp
         include/kubernetes/KubernetesWorker.h
         src/kubernetes/KubernetesWorker.cpp

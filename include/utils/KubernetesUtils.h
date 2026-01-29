@@ -14,7 +14,7 @@
 
 // Forwarder includes
 #include <utils/Configuration.h>
-#include <utils/KubernetesService.h>
+#include <service/KubernetesService.h>
 #include <utils/SystemUtils.h>
 #include <dto/kubernetes/Pod.h>
 
@@ -153,5 +153,10 @@ private:
      * @brief System utils
      */
     SystemUtils *_systemUtils;
+
+    /**
+     * @brief POD name suffix
+     */
+    QString _suffix;
 };
 #endif //AWSFORWARDER_KUBERNETES_UTILS_H
