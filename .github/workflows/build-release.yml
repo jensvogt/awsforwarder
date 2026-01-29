@@ -45,98 +45,97 @@ jobs:
     runs-on: windows-latest
     needs: release-please
     if: ${{ needs.release-please.outputs.release_created == 'true' }}
+
     env:
-      #QT_DIR: "${{ github.workspace }}\\Qt"
-      BUILD_DIR: "${{ github.workspace }}\\build-windows"
-      INSTALLER_DIR: "${{ github.workspace }}\\installer"
-      SEMVER: "${{ needs.release-please.outputs.tag_name }}"
+      APP_NAME: awsforwarder
+      BUILD_DIR: ${{ github.workspace }}\build-windows
+      INSTALLER_DIR: ${{ github.workspace }}\installer
+      QT_DIR: ${{ github.workspace }}\Qt
+      QT_VERSION: 6.10.1
+      SEMVER: ${{ needs.release-please.outputs.tag_name }}
+      INSTALLER_ID: de.jensvogt.awsforwarder
       VCPKG_DEFAULT_TRIPLET: x64-windows
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup MSVC environment
+      - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
 
-      - name: Ensure vcpkg toolchain exists (Windows)
-        id: ensure-vcpkg-windows
-        shell: pwsh
-        run: |
-          $v = Join-Path $Env:GITHUB_WORKSPACE 'vcpkg'
-          if (-not (Test-Path $v)) {
-            Write-Host "Cloning vcpkg into $v"
-            git clone https://github.com/microsoft/vcpkg.git $v
-            Write-Host "Bootstrapping vcpkg"
-            & "${v}\bootstrap-vcpkg.bat"
-          } else {
-            Write-Host "vcpkg already present at $v"
-          }
-          echo "VCPKG_ROOT=$v" >> $Env:GITHUB_ENV
-
-      - name: Get vcpkg commit (Windows)
-        id: vcpkg-commit
-        shell: pwsh
-        run: |
-          $v = Join-Path $Env:GITHUB_WORKSPACE 'vcpkg'
-          if (Test-Path $v) {
-            $sha = (git -C $v rev-parse --short HEAD).Trim()
-            echo "VCPKG_COMMIT=$sha" >> $Env:GITHUB_ENV
-          } else {
-            echo "VCPKG_COMMIT=unknown" >> $Env:GITHUB_ENV
-          }
+      # ------------------------
+      # vcpkg (AWS SDK + yaml)
+      # ------------------------
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: '2024.01.12'
 
       - name: Install vcpkg dependencies
         run: |
-          vcpkg --vcpkg-root ${{ env.VCPKG_ROOT }} install aws-sdk-cpp[core,secretsmanager,sts,eks]:${{ env.VCPKG_DEFAULT_TRIPLET }}
-          vcpkg --vcpkg-root ${{ env.VCPKG_ROOT }} install yaml-cpp:${{ env.VCPKG_DEFAULT_TRIPLET }}
-          vcpkg --vcpkg-root ${{ env.VCPKG_ROOT }} install qt:${{ env.VCPKG_DEFAULT_TRIPLET }} 
-          vcpkg --vcpkg-root ${{ env.VCPKG_ROOT }} install qtapplicationmanager:${{ env.VCPKG_DEFAULT_TRIPLET }}
+          vcpkg install aws-sdk-cpp[core,secretsmanager,sts,eks]:x64-windows
+          vcpkg install yaml-cpp:x64-windows
 
-      #      - name: Install Python & aqtinstall
-      #        shell: powershell
-      #        run: |
-      #          python -m pip install --upgrade pip
-      #          python -m pip install -U aqtinstall
-      #
-      #      - name: Install Qt and Qt Installer Framework (IFW)
-      #        shell: powershell
-      #        run: |
-      #          python -m aqt install-qt windows desktop $env:QT_VERSION win64_msvc2022_64 --outputdir $env:QT_DIR --modules qtimageformats qtcharts
-      #          python -m aqt install-tool windows desktop tools_ifw --outputdir $env:QT_DIR
-
-      - name: Configure CMake (Windows)
+      # ------------------------
+      # Qt (prebuilt, FAST)
+      # ------------------------
+      - name: Install Qt & IFW
         shell: powershell
         run: |
-          cmake -S . -B $env:BUILD_DIR -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DVCPKG_ROOT=${{ env.VCPKG_ROOT}} -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_DEFAULT_TRIPLET }}
+          python -m pip install --upgrade pip
+          python -m pip install aqtinstall
+          python -m aqt install-qt windows desktop $env:QT_VERSION win64_msvc2022_64 `
+            --outputdir $env:QT_DIR `
+            --modules qtimageformats qtsvg
+          python -m aqt install-tool windows desktop tools_ifw `
+            --outputdir $env:QT_DIR
 
-      - name: Build (Windows, parallel)
+      # ------------------------
+      # Configure + Build
+      # ------------------------
+      - name: Configure CMake
         shell: powershell
         run: |
-          cmake --build $env:BUILD_DIR --config Release --parallel
+          cmake -S . -B $env:BUILD_DIR -G Ninja `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" `
+            -DVCPKG_TARGET_TRIPLET=x64-windows `
+            -DQt6_DIR="$env:QT_DIR\$env:QT_VERSION\msvc2022_64\lib\cmake\Qt6"
 
-      - name: Deploy Qt runtime with windeployqt (into installer data folder)
+      - name: Build
+        shell: powershell
+        run: |
+          cmake --build $env:BUILD_DIR --parallel
+
+      # ------------------------
+      # Package (windeployqt + IFW)
+      # ------------------------
+      - name: Deploy Qt runtime (windeployqt)
         shell: powershell
         run: |
           $exe = Join-Path $env:BUILD_DIR "$env:APP_NAME.exe"
           $dataDir = Join-Path $env:INSTALLER_DIR "packages\$env:INSTALLER_ID\data"
           New-Item -ItemType Directory -Path $dataDir -Force | Out-Null
-          & "$env:QT_DIR\$env:QT_VERSION\msvc2022_64\bin\windeployqt6.exe" $exe --dir $dataDir
+          & "$env:QT_DIR\$env:QT_VERSION\msvc2022_64\bin\windeployqt6.exe" `
+            $exe --dir $dataDir
           Copy-Item $exe $dataDir
           Copy-Item dist\etc\awsforwarder.json $dataDir
           Copy-Item extern\bin\libcurl.dll $dataDir
 
-      - name: Build Qt Installer Framework installer (binarycreator)
-        shell: pwsh
+      - name: Build Qt Installer Framework installer
+        shell: powershell
         run: |
-          $ifwRoot = Get-ChildItem "$env:QT_DIR\Tools\QtInstallerFramework" -Directory | Sort-Object Name -Descending | Select-Object -First 1
-          if (-not $ifwRoot) { Write-Error "IFW not found"; exit 1 }
-          $ifwBin = Join-Path $ifwRoot.FullName "bin"
-          $env:PATH = "$ifwBin;$env:PATH"
-          binarycreator -c "$env:INSTALLER_DIR\config\config.xml" -p "$env:INSTALLER_DIR\packages" "$env:INSTALLER_DIR\$env:APP_NAME-$env:SEMVER-windows.exe"
+          $ifw = Get-ChildItem "$env:QT_DIR\Tools\QtInstallerFramework" -Directory |
+                 Sort-Object Name -Descending | Select-Object -First 1
+          $env:PATH = "$($ifw.FullName)\bin;$env:PATH"
+          binarycreator `
+            -c "$env:INSTALLER_DIR\config\config.xml" `
+            -p "$env:INSTALLER_DIR\packages" `
+            "$env:INSTALLER_DIR\$env:APP_NAME-$env:SEMVER-windows.exe"
 
       - name: Upload Windows installer
         uses: actions/upload-artifact@v4
