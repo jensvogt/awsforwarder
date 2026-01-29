@@ -12,8 +12,8 @@ message(STATUS "Configured version: ${PROJECT_VERSION}")
 # Export version to source code
 configure_file(${CMAKE_SOURCE_DIR}/cmake/version.h.in ${CMAKE_SOURCE_DIR}/include/Version.h)
 update_xml_version("${CMAKE_SOURCE_DIR}/installer/config/config.xml" "${VERSION_STRING}" "Version")
-update_xml_version("${CMAKE_SOURCE_DIR}/installer/packages/de.jensvogt.awsmockqtui/meta/package.xml" "${VERSION_STRING}" "Version")
-update_release_date("${CMAKE_SOURCE_DIR}/installer/packages/de.jensvogt.awsmockqtui/meta/package.xml")
+update_xml_version("${CMAKE_SOURCE_DIR}/installer/packages/de.jensvogt.awsforwarder/meta/package.xml" "${VERSION_STRING}" "Version")
+update_release_date("${CMAKE_SOURCE_DIR}/installer/packages/de.jensvogt.awsforwarder/meta/package.xml")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTOMOC ON)
