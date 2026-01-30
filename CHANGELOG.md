@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.18](https://github.com/jensvogt/awsforwarder/compare/v1.4.17...v1.4.18) (2026-01-30)
+
+
+### Bug Fixes
+
+* **PIM-1234:** add vcpkg toolchain ([8b178e9](https://github.com/jensvogt/awsforwarder/commit/8b178e951dae47b163b8efc99681930bcc0f0dda))
+
 ## [1.4.17](https://github.com/jensvogt/awsforwarder/compare/v1.4.16...v1.4.17) (2026-01-30)
 
 
