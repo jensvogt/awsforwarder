@@ -78,8 +78,8 @@ jobs:
 
       - name: Install vcpkg dependencies
         run: |
-          vcpkg install aws-sdk-cpp[core,secretsmanager,sts,eks]:x64-windows
-          vcpkg install yaml-cpp:x64-windows
+          vcpkg --vcpkg-root=${{env.VCPKG_ROOT}} install aws-sdk-cpp[core,secretsmanager,sts,eks]:${{env.VCPKG_DEFAULT_TRIPLET}}
+          vcpkg --vcpkg-root=${{env.VCPKG_ROOT}} install yaml-cpp:${{env.VCPKG_DEFAULT_TRIPLET}}
 
       # ------------------------
       # Qt (prebuilt, FAST)
@@ -101,7 +101,7 @@ jobs:
           $qtPrefix = Join-Path $env:QT_DIR "$env:QT_VERSION\msvc2022_64"
           if (!(Test-Path $qtPrefix)) { Write-Error "Qt prefix not found: $qtPrefix"; exit 1 }
           if (!(Test-Path $env:BUILD_DIR)) { New-Item -ItemType Directory -Path $env:BUILD_DIR | Out-Null }
-          cmake -S . -B $env:BUILD_DIR -G "Ninja" -DQt6_DIR="$env:QT_DIR\$env:QT_VERSION\msvc2022_64\lib\cmake\Qt6" -DCMAKE_BUILD_TYPE=Release -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows
+          cmake -S . -B $env:BUILD_DIR -G "Ninja" -DQt6_DIR="$env:QT_DIR\$env:QT_VERSION\msvc2022_64\lib\cmake\Qt6" -DCMAKE_BUILD_TYPE=Release -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=${{env.VCPKG_DEFAULT_TRIPLET}}
 
       - name: Build
         shell: powershell
