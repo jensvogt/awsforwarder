@@ -98,10 +98,9 @@ jobs:
       - name: Configure CMake
         shell: powershell
         run: |
-               $Env:Qt6_DIR="$env:QT_DIR\$env:QT_VERSION\msvc2022_64"
-          #                  if (!(Test-Path $qtPrefix)) { Write-Error "Qt prefix not found: $qtPrefix"; exit 1 }
-               if (!(Test-Path $env:BUILD_DIR)) { New-Item -ItemType Directory -Path $env:BUILD_DIR | Out-Null }
-               cmake -S . -B $env:BUILD_DIR -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$qtPrefix\lib\cmake\Qt6" -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake"
+          $Env:Qt6_DIR="$env:QT_DIR\$env:QT_VERSION\msvc2022_64"
+          if (!(Test-Path $env:BUILD_DIR)) { New-Item -ItemType Directory -Path $env:BUILD_DIR | Out-Null }
+          cmake -S . -B $env:BUILD_DIR -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$qtPrefix\lib\cmake\Qt6" -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake"
 
       - name: Build
         shell: powershell
