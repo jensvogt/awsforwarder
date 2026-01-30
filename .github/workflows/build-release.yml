@@ -157,9 +157,9 @@ jobs:
     needs: release-please
     if: ${{ needs.release-please.outputs.release_created == 'true' }}
     env:
-      BUILD_DIR: "${{ github.workspace }}\build-macos"
+      BUILD_DIR: "${{ github.workspace }}/build-macos"
       SEMVER: "${{ needs.release-please.outputs.tag_name }}"
-      INSTALLER_DIR: "${{ github.workspace }}\installer"
+      INSTALLER_DIR: "${{ github.workspace }}/installer"
       APP_NAME: "awsforwarder"
       VCPKG_DEFAULT_TRIPLET: x64-windows-static
     steps:
