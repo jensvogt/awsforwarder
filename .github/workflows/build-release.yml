@@ -52,6 +52,7 @@ jobs:
       INSTALLER_DIR: ${{ github.workspace }}/installer
       QT_DIR: ${{ github.workspace }}/Qt
       QT_VERSION: 6.10.1
+      Qt6_DIR: ${{env.QT_DIR}}/${{env.QT_VERSION}}/msvc2022_64"
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       SEMVER: ${{ needs.release-please.outputs.tag_name }}
       INSTALLER_ID: de.jensvogt.awsforwarder
@@ -98,9 +99,10 @@ jobs:
       # ------------------------
       - name: Configure CMake
         run: |
-          set Qt6_DIR="${{env.QT_DIR}}\${{env.QT_VERSION}}\msvc2022_64"
           mkdir ${{env.BUILD_DIR}}
-          cmake -S . -B ${{env.BUILD_DIR}} -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="%Qt6_DIR%\lib\cmake\Qt6" -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}\scripts\buildsystems\vcpkg.cmake"
+          echo ${{env.Qt6_DIR}}
+          echo ${{env.VCPKG_ROOT}}
+          cmake -S . -B ${{env.BUILD_DIR}} -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="${{env.Qt6_DIR}}\lib\cmake\Qt6" -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}\scripts\buildsystems\vcpkg.cmake"
 
       - name: Build
         shell: powershell
