@@ -100,9 +100,9 @@ jobs:
         shell: powershell
         run: |
           $Env:Qt6_DIR="$env:QT_DIR\$env:QT_VERSION\msvc2022_64"
-          $Env:AWSSDK_DIR="$env.VCPKG_ROOT\installed\x64-windows\share\awssdk"
+          $Env:AWSSDK_DIR="$env.VCPKG_ROOT\installed\x64-windows"
           if (!(Test-Path $env:BUILD_DIR)) { New-Item -ItemType Directory -Path $env:BUILD_DIR | Out-Null }
-          cmake -S . -B $env:BUILD_DIR -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$qtPrefix\lib\cmake\Qt6" -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake"
+          cmake -S . -B $env:BUILD_DIR -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$qtPrefix\lib\cmake\Qt6;$Env:AWSSDK_DIR" -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake"
 
       - name: Build
         shell: powershell
