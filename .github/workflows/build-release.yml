@@ -1,5 +1,10 @@
 name: Release + Build + Installer (Windows / macOS / Linux)
 
+# Concurrency
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 on:
   push:
     branches: [ "main" ]
