@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>AwsForwarder</DisplayName>
+    <Description>AwsForwarder</Description>
+    <Version>1.4.80</Version>
+    <ReleaseDate>2026-01-18 10:35:51</ReleaseDate>
+    <Default>true</Default>
+    <Script>installscript.qs</Script>
+    <RequiresAdminRights>true</RequiresAdminRights>
+    <ForcedInstallation>true</ForcedInstallation>
+</Package>
+
