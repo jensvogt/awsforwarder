@@ -41,7 +41,7 @@ else ()
     set(EXTERNAL_INC_DIR /usr/local/include)
 endif ()
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Svg Network Xml)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Network Xml)
 find_package(AWSSDK CONFIG COMPONENTS core secretsmanager sts eks REQUIRED)
 find_package(yaml-cpp CONFIG REQUIRED)
 
