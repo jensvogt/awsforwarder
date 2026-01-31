@@ -48,12 +48,12 @@ jobs:
 
     env:
       APP_NAME: awsforwarder
-      BUILD_DIR: ${{ github.workspace }}/build-windows
-      INSTALLER_DIR: ${{ github.workspace }}/installer
-      QT_DIR: ${{ github.workspace }}/Qt
+      BUILD_DIR: ${{ github.workspace }}\build-windows
+      INSTALLER_DIR: ${{ github.workspace }}\installer
+      QT_DIR: ${{ github.workspace }}\Qt
       QT_VERSION: 6.10.1
-      Qt6_DIR: ${{ github.workspace }}/Qt/6.10.1/msvc2022_64"
-      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      Qt6_DIR: ${{ github.workspace }}\Qt\6.10.1\msvc2022_64"
+      VCPKG_ROOT: ${{ github.workspace }}\vcpkg
       SEMVER: ${{ needs.release-please.outputs.tag_name }}
       INSTALLER_ID: de.jensvogt.awsforwarder
       VCPKG_DEFAULT_TRIPLET: x64-windows
@@ -81,7 +81,6 @@ jobs:
         run: |
           vcpkg --vcpkg-root=${{env.VCPKG_ROOT}} install aws-sdk-cpp[core,secretsmanager,sts,eks]:${{env.VCPKG_DEFAULT_TRIPLET}}
           vcpkg --vcpkg-root=${{env.VCPKG_ROOT}} install yaml-cpp:${{env.VCPKG_DEFAULT_TRIPLET}}
-          vcpkg --vcpkg-root=${{env.VCPKG_ROOT}} --triplet=${{env.VCPKG_DEFAULT_TRIPLET}} list
 
       # ------------------------
       # Qt (prebuilt, FAST)
@@ -99,10 +98,10 @@ jobs:
       # ------------------------
       - name: Configure CMake
         run: |
-          mkdir ${{env.BUILD_DIR}}
-          echo ${{env.Qt6_DIR}}
-          echo ${{env.VCPKG_ROOT}}
-          cmake -S . -B ${{env.BUILD_DIR}} -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="${{env.Qt6_DIR}}\lib\cmake\Qt6" -DCMAKE_TOOLCHAIN_FILE="${{env.VCPKG_ROOT}}\scripts\buildsystems\vcpkg.cmake"
+          mkdir ${{ env.BUILD_DIR }}
+          echo ${{ env.Qt6_DIR }}
+          echo ${{ env.VCPKG_ROOT }}
+          cmake -S . -B ${{ env.BUILD_DIR }} -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="${{ env.Qt6_DIR }}\lib\cmake\Qt6" -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}\scripts\buildsystems\vcpkg.cmake"
 
       - name: Build
         shell: powershell
