@@ -97,11 +97,12 @@ jobs:
       # Configure + Build
       # ------------------------
       - name: Configure CMake
+        shell: cmd
         run: |
           mkdir ${{ env.BUILD_DIR }}
-          echo ${{ env.Qt6_DIR }}
-          echo ${{ env.VCPKG_ROOT }}
-          cmake -S . -B ${{ env.BUILD_DIR }} -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="${{ env.Qt6_DIR }}\lib\cmake\Qt6" -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}\scripts\buildsystems\vcpkg.cmake"
+          echo "${{ env.Qt6_DIR }}"
+          echo "${{ env.VCPKG_ROOT }}"
+          cmake -S . -B "${{ env.BUILD_DIR }}" -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="${{ env.Qt6_DIR }}\lib\cmake\Qt6" -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}\scripts\buildsystems\vcpkg.cmake"
 
       - name: Build
         shell: powershell
