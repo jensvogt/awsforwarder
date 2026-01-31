@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.4.19](https://github.com/jensvogt/awsforwarder/compare/v1.4.18...v1.4.19) (2026-01-31)
+
+
+### Bug Fixes
+
+* **PIM-1234:** add vcpkg toolchain ([6871c0b](https://github.com/jensvogt/awsforwarder/commit/6871c0baf525f88a8dd6e0561d0c6ae3e0e0f387))
+* **PIM-1234:** add vcpkg toolchain ([77ad728](https://github.com/jensvogt/awsforwarder/commit/77ad728dddb964d953142241325be3926102e267))
+* **PIM-1234:** add vcpkg toolchain ([4e80603](https://github.com/jensvogt/awsforwarder/commit/4e80603116607688f9e0348cd63ebc77e97c256e))
+* **PIM-1234:** add vcpkg toolchain ([8fb1e3f](https://github.com/jensvogt/awsforwarder/commit/8fb1e3ff01761db999ea07d75410b1dbe7bafbbb))
+* **PIM-1234:** add vcpkg toolchain ([559ca71](https://github.com/jensvogt/awsforwarder/commit/559ca71df7f5b70c4f136ecdffce1d1619452c82))
+* **PIM-1234:** add vcpkg toolchain ([fdb54f1](https://github.com/jensvogt/awsforwarder/commit/fdb54f1fb14a5634500731f73eb9351a751fea49))
+* **PIM-1234:** add vcpkg toolchain ([d45f9fa](https://github.com/jensvogt/awsforwarder/commit/d45f9fad90d4eba6500145864dd19ffd655ec998))
+* **PIM-1234:** add vcpkg toolchain ([fa13db1](https://github.com/jensvogt/awsforwarder/commit/fa13db1c48628b952ab8a35657f3d93660f934fd))
+* **PIM-1234:** add vcpkg toolchain ([7651593](https://github.com/jensvogt/awsforwarder/commit/76515930b2cee00d8e0f0a915d2f8d58676c1d7b))
+* **PIM-1234:** add vcpkg toolchain ([9eba00b](https://github.com/jensvogt/awsforwarder/commit/9eba00b41b6eacc41d3bab7226c025642b1afe38))
+* **PIM-1234:** add vcpkg toolchain ([07e2bb9](https://github.com/jensvogt/awsforwarder/commit/07e2bb9299961c0246f8a826a7f4156e1e073a76))
+* **PIM-1234:** add vcpkg toolchain ([1452658](https://github.com/jensvogt/awsforwarder/commit/145265898a36ea2a3e943cb4d9aa3c5d47703e86))
+* **PIM-1234:** add vcpkg toolchain ([9325a80](https://github.com/jensvogt/awsforwarder/commit/9325a809b0f9e8035eec5c08a2d872ecc139b1a8))
+* **PIM-1234:** add vcpkg toolchain ([0fbbf86](https://github.com/jensvogt/awsforwarder/commit/0fbbf86ff7e4eb4175c1c22734347fdfc7999f8d))
+* **PIM-1234:** add vcpkg toolchain ([8400daf](https://github.com/jensvogt/awsforwarder/commit/8400daf3cdf13506c7aa1300befdd96c5333694c))
+* **PIM-1234:** add vcpkg toolchain ([7e15a1f](https://github.com/jensvogt/awsforwarder/commit/7e15a1f97a9cd9e6ba8b71100b4592f2b4ab797e))
+* **PIM-1234:** add vcpkg toolchain ([ec90d15](https://github.com/jensvogt/awsforwarder/commit/ec90d157cd8603959ed047afde0eb11b20db82dc))
+* **PIM-1234:** add vcpkg toolchain ([f50fa86](https://github.com/jensvogt/awsforwarder/commit/f50fa8626d188801c8447c8b102304942d206e6d))
+* **PIM-1234:** add vcpkg toolchain ([3fa8a55](https://github.com/jensvogt/awsforwarder/commit/3fa8a55e8d5cb8750fecc9432c55f02ac099cd21))
+* **PIM-1234:** add vcpkg toolchain ([0557c2d](https://github.com/jensvogt/awsforwarder/commit/0557c2d37ad01c5d380ed55fa4f4aeb6b24590dc))
+* **PIM-1234:** add vcpkg toolchain ([f7a8d34](https://github.com/jensvogt/awsforwarder/commit/f7a8d34e27fbf556388876c3f49c254a01212c12))
+* **PIM-1234:** add vcpkg toolchain ([394c37b](https://github.com/jensvogt/awsforwarder/commit/394c37bebc5718fb009a59e8c66dd13f7df76732))
+
 ## [1.4.18](https://github.com/jensvogt/awsforwarder/compare/v1.4.17...v1.4.18) (2026-01-30)
 
 
