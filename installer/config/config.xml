@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>AwsForwarder</Name>
+    <Version>1.4.80</Version>
+    <Title>AwsForwarder</Title>
+    <Publisher>Jens Vogt</Publisher>
+    <StartMenuDir>awsforwarder</StartMenuDir>
+    <TargetDir>@ApplicationsDir@/awsforwarder</TargetDir>
+    <RemoteRepositories>
+        <Repository>
+            <Url>https://jensvogt.github.io/awsforwarder</Url>
+            <Enabled>true</Enabled>
+        </Repository>
+    </RemoteRepositories>
+</Installer>
+
