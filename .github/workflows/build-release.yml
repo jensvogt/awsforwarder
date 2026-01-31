@@ -119,7 +119,7 @@ jobs:
           New-Item -ItemType Directory -Path $dataDir -Force | Out-Null
           & "$env:QT_DIR\$env:QT_VERSION\msvc2022_64\bin\windeployqt6.exe" $exe --dir $dataDir
           Copy-Item $exe $dataDir
-          Copy-Item dist\etc\awsforwarder.json $dataDir
+          Copy-Item dist\etc\awsforwarder_win32.json $dataDir
 
       - name: Build Qt Installer Framework installer
         shell: powershell
