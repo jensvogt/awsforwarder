@@ -33,11 +33,24 @@ public slots:
     void Shutdown() const;
 
 private:
-    //void CheckPods(const QString &awsAccount) const;
-
     static QStringList GetPortList(const QString &nameSpace);
 
+    /**
+     * @brief Starts the forwarder POD on the kubernetes cluster.
+     *
+     * @param awsAccount AWS account
+     * @param nameSpace kubernetes namespace
+     */
     void StartForwarderPod(const QString &awsAccount, const QString &nameSpace) const;
+
+    /**
+     * @brief Checks whether a forwarder process is already running on the localhost
+     *
+     * @param awsAccount AWS account
+     * @param nameSpace kubernetes namespace
+     * @return true if forwarder process is running already
+     */
+    bool IsForwarderRunning(const QString &awsAccount, const QString &nameSpace) const;
 
     /**
      * @brief Namespace

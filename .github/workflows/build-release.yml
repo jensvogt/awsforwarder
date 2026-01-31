@@ -80,6 +80,7 @@ jobs:
         run: |
           vcpkg --vcpkg-root=${{env.VCPKG_ROOT}} install aws-sdk-cpp[core,secretsmanager,sts,eks]:${{env.VCPKG_DEFAULT_TRIPLET}}
           vcpkg --vcpkg-root=${{env.VCPKG_ROOT}} install yaml-cpp:${{env.VCPKG_DEFAULT_TRIPLET}}
+          vcpkg --vcpkg-root=${{env.VCPKG_ROOT}} --triplet=${{env.VCPKG_DEFAULT_TRIPLET}} list
 
       # ------------------------
       # Qt (prebuilt, FAST)
@@ -101,7 +102,7 @@ jobs:
           $Env:Qt6_DIR="$env:QT_DIR\$env:QT_VERSION\msvc2022_64"
           $Env:AWSSDK_DIR="$env.VCPKG_ROOT\installed\x64-windows\share\awssdk"
           if (!(Test-Path $env:BUILD_DIR)) { New-Item -ItemType Directory -Path $env:BUILD_DIR | Out-Null }
-          cmake -S . -B $env:BUILD_DIR -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$qtPrefix\lib\cmake\Qt6" -DCMAKE_PREFIX_PATH="$env.VCPKG_ROOT\installed\x64-windows\share\awssdk"-DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake"
+          cmake -S . -B $env:BUILD_DIR -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$qtPrefix\lib\cmake\Qt6" -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake"
 
       - name: Build
         shell: powershell

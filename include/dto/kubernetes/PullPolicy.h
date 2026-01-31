@@ -13,14 +13,14 @@ enum PullPolicy {
     PullAlways,
     PullNever,
     PullIfNotPresent,
-    Unknown
+    UnknownPull
 };
 
 static std::map<PullPolicy, QString> PullPolicyNames{
     {PullAlways, "Always"},
     {PullNever, "Never"},
     {PullIfNotPresent, "IfNotPresent"},
-    {Unknown, "Unknown"},
+    {UnknownPull, "Unknown"},
 };
 
 [[maybe_unused]] static QString PullPolicyToString(const PullPolicy pullPolicy) {
@@ -33,7 +33,7 @@ static std::map<PullPolicy, QString> PullPolicyNames{
             return fst;
         }
     }
-    return Unknown;
+    return UnknownPull;
 }
 
 #endif// AWSFORWARDER_DTO_KUBERNETES_PULL_POLICY_H

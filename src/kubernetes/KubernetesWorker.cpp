@@ -5,7 +5,6 @@
 #include <kubernetes/KubernetesWorker.h>
 
 KubernetesWorker::KubernetesWorker() : _kubernetesUtils(nullptr), _restManager(nullptr) {
-
     _suffix = Configuration::instance().GetForwarderSuffix();
     _kubernetesUtils = new KubernetesUtils(_restManager);
 }
@@ -15,14 +14,15 @@ void KubernetesWorker::Shutdown() const {
 }
 
 void KubernetesWorker::DoWork(const QString &awsAccount, const QString &nameSpace, const Aws::STS::Model::Credentials &credentials) const {
-
     if (!_kubernetesUtils->PodExists(awsAccount, nameSpace, nameSpace + _suffix)) {
         log_warning("Forwarder POD not found, nameSpace: " + nameSpace);
         StartForwarderPod(awsAccount, nameSpace);
     } else {
         log_info("Forwarder POD found, nameSpace: " + nameSpace);
     }
-    _kubernetesUtils->StartForwarder(awsAccount, nameSpace, GetPortList(nameSpace));
+    if (!IsForwarderRunning(awsAccount, nameSpace)) {
+        _kubernetesUtils->StartForwarder(awsAccount, nameSpace, GetPortList(nameSpace));
+    }
 }
 
 QStringList KubernetesWorker::GetPortList(const QString &nameSpace) {
@@ -34,7 +34,6 @@ QStringList KubernetesWorker::GetPortList(const QString &nameSpace) {
 }
 
 void KubernetesWorker::StartForwarderPod(const QString &awsAccount, const QString &nameSpace) const {
-
     const QString kubernetesCmd = Configuration::instance().GetKubeCtlExecutable();
     const QString kubernetesConfig = Configuration::instance().GetKubernetesConfigFile();
     const QString forwarderImageName = Configuration::instance().GetForwarderImageName();
@@ -52,4 +51,9 @@ void KubernetesWorker::StartForwarderPod(const QString &awsAccount, const QStrin
     }
 
     _kubernetesUtils->StartForwarderPod(awsAccount, nameSpace, tempFile.fileName());
+}
+
+bool KubernetesWorker::IsForwarderRunning(const QString &awsAccount, const QString &nameSpace) const {
+    SystemUtils::FindProcessByName("kubectl");
+    return true;
 }

@@ -5,6 +5,13 @@
 #ifndef AWSFORWARDER_SYSTEM_UTILS_H
 #define AWSFORWARDER_SYSTEM_UTILS_H
 
+#ifdef _WIN32
+#include <iostream>
+#include <comdef.h>
+#include <WbemIdl.h>
+#pragma comment(lib, "wbemuuid.lib")
+#endif
+
 // Qt includes
 #include <QProcess>
 
@@ -29,7 +36,6 @@ public:
     };
 
     void RunCommandAsync(const QString &nameSpace, const QString &command, const QStringList &arguments, QObject *parent = nullptr) {
-
         auto *_process = new QProcess(this);
 
         // 1. Capture the output
@@ -59,7 +65,6 @@ public:
     }
 
     RunCommandResult RunCommandSync(const QString &command, const QStringList &arguments, QObject *parent = nullptr) {
-
         RunCommandResult result;
 
         auto *_process = new QProcess(this);
@@ -91,10 +96,14 @@ public:
     static long FindProcessByName(const QString &fullName) {
 #ifdef _WIN32
         QProcess p;
-        p.start("tasklist", {"/FI", "IMAGENAME eq mytool.exe"});
+        p.start("tasklist", {"/FI", "IMAGENAME eq kubectl.exe /FO TABLE /NH"});
         p.waitForFinished();
 
-        bool running = p.readAllStandardOutput().contains("mytool.exe");
+        QString output = p.readAllStandardOutput();
+        if (output.isEmpty()) {
+            return -1;
+        }
+        return output.split(' ')[1].toInt();
 #else
         QProcess p;
         p.start("pgrep", QStringList() << fullName);
@@ -106,12 +115,56 @@ public:
 #endif
     }
 
+#ifdef WIN32
+    static QString GetProcessCommandLine(const DWORD processId) {
+        QString result;
+        HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
+        if (FAILED(hr)) return {};
+
+        hr = CoInitializeSecurity(nullptr, -1, nullptr, nullptr, RPC_C_AUTHN_LEVEL_DEFAULT,RPC_C_IMP_LEVEL_IMPERSONATE, nullptr, EOAC_NONE, nullptr);
+
+        IWbemLocator *pLoc = nullptr;
+        hr = CoCreateInstance(CLSID_WbemLocator, 0, CLSCTX_INPROC_SERVER, IID_IWbemLocator, (LPVOID *) &pLoc);
+
+        IWbemServices *pSvc = nullptr;
+        hr = pLoc->ConnectServer(_bstr_t(L"ROOT\\CIMV2"), nullptr, nullptr, 0, 0, 0, 0, &pSvc);
+
+        // Query for the specific process
+        std::wstring query = L"SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + std::to_wstring(processId);
+
+        IEnumWbemClassObject *pEnumerator = nullptr;
+        hr = pSvc->ExecQuery(bstr_t("WQL"), bstr_t(query.c_str()), WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY, nullptr, &pEnumerator);
+
+        IWbemClassObject *pclsObj = nullptr;
+        ULONG uReturn = 0;
+
+        if (pEnumerator) {
+            hr = pEnumerator->Next(WBEM_INFINITE, 1, &pclsObj, &uReturn);
+            if (uReturn != 0) {
+                VARIANT vtProp;
+                hr = pclsObj->Get(L"CommandLine", 0, &vtProp, 0, 0);
+                if (vtProp.vt == VT_BSTR) {
+                    result = QString(vtProp.bstrVal);
+                }
+                VariantClear(&vtProp);
+                pclsObj->Release();
+            }
+        }
+
+        // Cleanup
+        if (pSvc) pSvc->Release();
+        if (pLoc) pLoc->Release();
+        if (pEnumerator) pEnumerator->Release();
+        CoUninitialize();
+        return result;
+    }
+#endif
+
     static long ProcessExistsByName(const QString &fullName) {
         return FindProcessByName(fullName) > 0;
     }
 
     static QString KillProcessByName(const QString &fullName) {
-
         const long pid = FindProcessByName(fullName);
         QProcess p;
         p.start("kill", QStringList() << "-9" << QString::number(pid));
@@ -121,6 +174,5 @@ public:
 
 private:
     QList<QProcess *> _processes;
-
 };
 #endif //AWSFORWARDER_SYSTEM_UTILS_H

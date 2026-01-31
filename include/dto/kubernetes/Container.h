@@ -15,7 +15,6 @@
 #include <dto/kubernetes/PullPolicy.h>
 
 struct Container {
-
     /**
      * @brief Container name
      */
@@ -29,7 +28,7 @@ struct Container {
     /**
      * @brief Image pull policy
      */
-    PullPolicy pullPolicy = Unknown;
+    PullPolicy pullPolicy = UnknownPull;
 
     /**
      * @brief Environment variables
