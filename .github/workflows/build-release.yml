@@ -44,7 +44,7 @@ jobs:
     name: Build & Package (Windows)
     runs-on: windows-latest
     needs: release-please
-    #    if: ${{ needs.release-please.outputs.release_created == 'true' }}
+    if: ${{ needs.release-please.outputs.release_created == 'true' }}
 
     env:
       APP_NAME: awsforwarder
@@ -385,10 +385,14 @@ jobs:
           name: rpm-package-linux
           path: ${{ env.APP_NAME }}-${{ env.SEMVER }}-amd64.rpm
 
+  # ====================================================================================================================
+  # build-macos, build-linux-rpm, build-linux-deb
+  # ====================================================================================================================
   publish:
     name: Publish Release & Attach Installers
     runs-on: ubuntu-latest
-    needs: [ release-please, build-windows, build-macos, build-linux-rpm, build-linux-deb ]
+    needs: [ release-please, build-windows ]
+
     env:
       SEMVER: "${{ needs.release-please.outputs.tag_name }}"
     steps:
