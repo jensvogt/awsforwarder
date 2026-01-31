@@ -407,23 +407,23 @@ jobs:
           name: installer-windows
           path: artifacts/windows
 
-      - name: Download macOS installer
-        uses: actions/download-artifact@v4
-        with:
-          name: installer-macos
-          path: artifacts/macos
-
-      - name: Download Linux Debian package
-        uses: actions/download-artifact@v4
-        with:
-          name: deb-package-linux
-          path: artifacts/linux
-
-      - name: Download Linux RPM package
-        uses: actions/download-artifact@v4
-        with:
-          name: rpm-package-linux
-          path: artifacts/linux
+      #      - name: Download macOS installer
+      #        uses: actions/download-artifact@v4
+      #        with:
+      #          name: installer-macos
+      #          path: artifacts/macos
+      #
+      #      - name: Download Linux Debian package
+      #        uses: actions/download-artifact@v4
+      #        with:
+      #          name: deb-package-linux
+      #          path: artifacts/linux
+      #
+      #      - name: Download Linux RPM package
+      #        uses: actions/download-artifact@v4
+      #        with:
+      #          name: rpm-package-linux
+      #          path: artifacts/linux
 
       - name: Download Windows Updates
         uses: actions/download-artifact@v4
