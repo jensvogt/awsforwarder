@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1](https://github.com/jensvogt/awsforwarder/compare/1.7.0...v1.7.1) (2026-02-01)
+
+
+### Bug Fixes
+
+* add win32 support ([f36779a](https://github.com/jensvogt/awsforwarder/commit/f36779ae81491f4156f26350066cdcf0dc23f666))
+
 ## [1.7.0](https://github.com/jensvogt/awsforwarder/compare/1.6.0...v1.7.0) (2026-02-01)
 
 
