@@ -173,13 +173,16 @@ jobs:
           fetch-depth: 0
 
       # ------------------------
-      # vcpkg (AWS SDK + yaml)
+      # vcpkg
       # ------------------------
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
         with:
           vcpkgGitCommitId: '66c0373dc7fca549e5803087b9487edfe3aca0a1'
 
+      # ------------------------
+      # Install dependencies (AWS SDK + yaml)
+      # ------------------------
       - name: Install vcpkg dependencies
         run: |
           vcpkg --vcpkg-root=${{env.VCPKG_ROOT}} install aws-sdk-cpp[core,secretsmanager,sts,eks]:${{env.VCPKG_DEFAULT_TRIPLET}}
