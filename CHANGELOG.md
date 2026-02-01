@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/jensvogt/awsforwarder/compare/1.6.0...v1.7.0) (2026-02-01)
+
+
+### Features
+
+* **macOS port:** add win32 support ([be4761c](https://github.com/jensvogt/awsforwarder/commit/be4761c6386e2fc1b04c6228a9ef06bdd6fc0dd2))
+
 ## [1.6.0](https://github.com/jensvogt/awsforwarder/compare/v1.5.0...v1.6.0) (2026-02-01)
 
 
