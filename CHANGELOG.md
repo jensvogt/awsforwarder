@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/jensvogt/awsforwarder/compare/v1.5.0...v1.6.0) (2026-02-01)
+
+
+### Features
+
+* **initial-import:** add win32 support ([16c26b0](https://github.com/jensvogt/awsforwarder/commit/16c26b0c2a504e222034ed42cb34348bd0033eba))
+
 ## [1.5.0](https://github.com/jensvogt/awsforwarder/compare/1.4.23...v1.5.0) (2026-02-01)
 
 
