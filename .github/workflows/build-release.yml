@@ -165,7 +165,7 @@ jobs:
       INSTALLER_DIR: "${{ github.workspace }}/installer"
       APP_NAME: "awsforwarder"
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-      VCPKG_DEFAULT_TRIPLET: x64-windows-static
+      VCPKG_DEFAULT_TRIPLET: x64-osx
     steps:
       - name: Checkout
         uses: actions/checkout@v4
