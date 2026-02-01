@@ -164,6 +164,7 @@ jobs:
       SEMVER: "${{ needs.release-please.outputs.tag_name }}"
       INSTALLER_DIR: "${{ github.workspace }}/installer"
       APP_NAME: "awsforwarder"
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       VCPKG_DEFAULT_TRIPLET: x64-windows-static
     steps:
       - name: Checkout
@@ -171,32 +172,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Ensure vcpkg toolchain exists (Windows)
-        id: ensure-vcpkg-windows
-        shell: pwsh
-        run: |
-          $v = Join-Path $Env:GITHUB_WORKSPACE 'vcpkg'
-          if (-not (Test-Path $v)) {
-            Write-Host "Cloning vcpkg into $v"
-            git clone https://github.com/microsoft/vcpkg.git $v
-            Write-Host "Bootstrapping vcpkg"
-            & "${v}\bootstrap-vcpkg.bat"
-          } else {
-            Write-Host "vcpkg already present at $v"
-          }
-          echo "VCPKG_ROOT=$v" >> $Env:GITHUB_ENV
+      # ------------------------
+      # vcpkg (AWS SDK + yaml)
+      # ------------------------
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: '66c0373dc7fca549e5803087b9487edfe3aca0a1'
 
-      - name: Get vcpkg commit (Windows)
-        id: vcpkg-commit
-        shell: pwsh
+      - name: Install vcpkg dependencies
         run: |
-          $v = Join-Path $Env:GITHUB_WORKSPACE 'vcpkg'
-          if (Test-Path $v) {
-            $sha = (git -C $v rev-parse --short HEAD).Trim()
-            echo "VCPKG_COMMIT=$sha" >> $Env:GITHUB_ENV
-          } else {
-            echo "VCPKG_COMMIT=unknown" >> $Env:GITHUB_ENV
-          }
+          vcpkg --vcpkg-root=${{env.VCPKG_ROOT}} install aws-sdk-cpp[core,secretsmanager,sts,eks]:${{env.VCPKG_DEFAULT_TRIPLET}}
+          vcpkg --vcpkg-root=${{env.VCPKG_ROOT}} install yaml-cpp:${{env.VCPKG_DEFAULT_TRIPLET}}
 
       - name: Install Qt via aqtinstall
         shell: bash
@@ -219,20 +206,15 @@ jobs:
         run: |
           cmake --build $BUILD_DIR --config Release --parallel $(sysctl -n hw.logicalcpu)
 
-      - name: macdeployqt + create DMG
-        shell: bash
+      - name: Deploy Qt (macdeployqt)
         run: |
-          APP_BUNDLE="$BUILD_DIR/${APP_NAME}.app"
-          if [ ! -d "$APP_BUNDLE" ]; then
-            echo "App bundle not found at $APP_BUNDLE"
-            ls -R "$BUILD_DIR"
-            exit 1
-          fi
-          MACDEPLOYQT="$(find ${HOME}/Qt -type f -name macdeployqt | head -n 1)"
-          "$MACDEPLOYQT" "$APP_BUNDLE"
-          mkdir -p dist
-          DMG_NAME="${APP_NAME}-${SEMVER}-macos.dmg"
-          hdiutil create "dist/$DMG_NAME" -volname "${APP_NAME}" -srcfolder "$APP_BUNDLE" -ov -format UDZO
+          macdeployqt build/awsforwarder.app -verbose=2
+
+      - name: Create DMG
+        run: |
+          mkdir dmg
+          cp -R build/awsforwarder.app dmg/
+          hdiutil create awsforwarder.dmg -volname "AwsForwarder" -srcfolder dmg -ov -format UDZO
 
       - name: Upload macOS DMG
         uses: actions/upload-artifact@v4

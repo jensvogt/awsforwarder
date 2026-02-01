@@ -20,9 +20,9 @@ void KubernetesWorker::DoWork(const QString &awsAccount, const QString &nameSpac
     } else {
         log_info("Forwarder POD found, nameSpace: " + nameSpace);
     }
-    if (!IsForwarderRunning(awsAccount, nameSpace)) {
-        _kubernetesUtils->StartForwarder(awsAccount, nameSpace, GetPortList(nameSpace));
-    }
+    //    if (!IsForwarderRunning(awsAccount, nameSpace)) {
+    _kubernetesUtils->StartForwarder(awsAccount, nameSpace, GetPortList(nameSpace));
+    //    }
 }
 
 QStringList KubernetesWorker::GetPortList(const QString &nameSpace) {

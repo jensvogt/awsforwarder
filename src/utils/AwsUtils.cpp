@@ -9,40 +9,48 @@ void AwsUtils::GetAwsSessionToken(const QString &awsAccount, const QString &name
     const auto region = Configuration::instance().GetValue<QString>("aws.region");
     const int timeout = Configuration::instance().GetValue<int>("aws.validation-period");
 
-    // Get the OneLogin SAML assertion XML
-    _oneloginUtils->GetAccessToken(awsAccount);
+    if (_credentials.contains(awsAccount) && _credentials[awsAccount].GetExpiration().UnderlyingTimestamp() > system_clock::now()) {
 
-    connect(_oneloginUtils, &OneLoginUtils::GetAccessTokenSignal, this, [this, region, nameSpace, timeout](const QString &account, const QString &accessToken) {
+        // Use cached value
+        emit GetAwsCredentialsSignal(awsAccount, nameSpace, _credentials[awsAccount]);
 
-        // Get the AWS role ARN
-        if (const QVector<QString> roleArn = GetRoleArn(accessToken); roleArn.isEmpty()) {
-            log_error("Get role ARN failed, account: " + account);
-        } else {
-            log_debug("Got role ARN, account: " + account + ", roleArn: " + roleArn[0] + ", principleArn: " + roleArn[1]);
+    } else {
 
-            // Configure STS client
-            Aws::Client::ClientConfiguration clientConfig;
-            clientConfig.region = region.toStdString();
-            const Aws::STS::STSClient stsClient(clientConfig);
+        // Get the OneLogin SAML assertion XML
+        _oneloginUtils->GetAccessToken(awsAccount);
 
-            // Create STS request
-            Aws::STS::Model::AssumeRoleWithSAMLRequest stsRequest;
-            stsRequest.SetRoleArn(roleArn.at(0).toStdString());
-            stsRequest.SetPrincipalArn(roleArn.at(1).toStdString());
-            stsRequest.SetSAMLAssertion(accessToken.toStdString());
-            stsRequest.SetDurationSeconds(timeout);
+        connect(_oneloginUtils, &OneLoginUtils::GetAccessTokenSignal, this, [this, region, nameSpace, timeout](const QString &account, const QString &accessToken) {
 
-            if (const Aws::STS::Model::AssumeRoleWithSAMLOutcome outcome = stsClient.AssumeRoleWithSAML(stsRequest); !outcome.IsSuccess()) {
-                log_error("Login to AWS failed, account: " + account);
+            // Get the AWS role ARN
+            if (const QVector<QString> roleArn = GetRoleArn(accessToken); roleArn.isEmpty()) {
+                log_error("Get role ARN failed, account: " + account);
             } else {
-                log_info("Login to AWS succeeded, account: " + account);
-                WriteAwsCredentialsFile(account, outcome);
-                WriteKubernetesConfig(account, outcome);
-                _credentials[account] = outcome.GetResult().GetCredentials();
-                emit GetAwsCredentialsSignal(account, nameSpace, outcome.GetResult().GetCredentials());
+                log_debug("Got role ARN, account: " + account + ", roleArn: " + roleArn[0] + ", principleArn: " + roleArn[1]);
+
+                // Configure STS client
+                Aws::Client::ClientConfiguration clientConfig;
+                clientConfig.region = region.toStdString();
+                const Aws::STS::STSClient stsClient(clientConfig);
+
+                // Create STS request
+                Aws::STS::Model::AssumeRoleWithSAMLRequest stsRequest;
+                stsRequest.SetRoleArn(roleArn.at(0).toStdString());
+                stsRequest.SetPrincipalArn(roleArn.at(1).toStdString());
+                stsRequest.SetSAMLAssertion(accessToken.toStdString());
+                stsRequest.SetDurationSeconds(timeout);
+
+                if (const Aws::STS::Model::AssumeRoleWithSAMLOutcome outcome = stsClient.AssumeRoleWithSAML(stsRequest); !outcome.IsSuccess()) {
+                    log_error("Login to AWS failed, account: " + account + ", error: " + QString(outcome.GetError().GetMessage().c_str()));
+                } else {
+                    log_info("Login to AWS succeeded, account: " + account);
+                    WriteAwsCredentialsFile(account, outcome);
+                    WriteKubernetesConfig(account, outcome);
+                    _credentials[account] = outcome.GetResult().GetCredentials();
+                    emit GetAwsCredentialsSignal(account, nameSpace, outcome.GetResult().GetCredentials());
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 QVector<QString> AwsUtils::GetRoleArn(const QString &encodedSamlAssertion) {

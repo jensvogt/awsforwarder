@@ -30,6 +30,7 @@ void MainWindow::SetupToolBar() {
 
     // Create/Get the Toolbar and add the action
     QToolBar *mainToolBar = addToolBar("Main Toolbar");
+    mainToolBar->setIconSize(QSize(16, 16));
     addAction(exitAction);
 
     const auto spacer = new QWidget();
