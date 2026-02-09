@@ -77,7 +77,7 @@ ForwarderConfig Configuration::GetForwarderConfig(const QJsonObject &jsonConfig)
     return config;
 }
 
-QVector<ForwarderConfig> Configuration::GetForwarderConfigs() {
+QVector<ForwarderConfig> Configuration::GetForwarderConfigs() const {
     return _configurationObject.kubernetes.forwarders;
 }
 
@@ -123,6 +123,7 @@ void Configuration::SetKubernetesPassword(const QString &nameSpace, const QStrin
     for (auto &forwarder: _configurationObject.kubernetes.forwarders) {
         if (forwarder.nameSpace == nameSpace && forwarder.name == name) {
             forwarder.password = password;
+            return;
         }
     }
 }
@@ -131,6 +132,7 @@ void Configuration::SetKubernetesUsername(const QString &nameSpace, const QStrin
     for (auto &forwarder: _configurationObject.kubernetes.forwarders) {
         if (forwarder.nameSpace == nameSpace && forwarder.name == name) {
             forwarder.username = username;
+            return;
         }
     }
 }

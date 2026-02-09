@@ -504,7 +504,7 @@ public:
      */
     void SetFilePath(const QString &filePath);
 
-    QVector<ForwarderConfig> GetForwarderConfigs();
+    QVector<ForwarderConfig> GetForwarderConfigs() const;
 
     QVector<ForwarderConfig> GetForwarderConfigs(const QString &nameSpace);
 

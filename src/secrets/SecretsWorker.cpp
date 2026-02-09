@@ -41,8 +41,8 @@ void SecretsWorker::GetPasswords(const QString &awsAccount, const QString &nameS
 
         // Get username/password
         QString secret = GetSecretFromAws(ssmClient, forwarder.secret);
-        Configuration::instance().SetKubernetesPassword(_nameSpace, forwarder.name, GetPassword(secret));
-        Configuration::instance().SetKubernetesUsername(_nameSpace, forwarder.name, GetUsername(secret));
+        Configuration::instance().SetKubernetesPassword(nameSpace, forwarder.name, GetPassword(secret));
+        Configuration::instance().SetKubernetesUsername(nameSpace, forwarder.name, GetUsername(secret));
         log_info(nameSpace + ":" + forwarder.name + ", password: " + GetPassword(secret));
     }
     Configuration::instance().WriteConfigurationFile();
