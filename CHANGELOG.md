@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.2](https://github.com/jensvogt/awsforwarder/compare/1.7.1...v1.7.2) (2026-02-09)
+
+
+### Bug Fixes
+
+* bug in namespaces during secrets ([1865756](https://github.com/jensvogt/awsforwarder/commit/186575658000bd9dfcf71c5d03f9fd3ac9a74493))
+
 ## [1.7.1](https://github.com/jensvogt/awsforwarder/compare/1.7.0...v1.7.1) (2026-02-01)
 
 
