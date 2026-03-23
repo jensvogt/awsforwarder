@@ -45,7 +45,7 @@ void OneLoginService::GetSamlResponse(const QString &host, const QString &path, 
                                    log_error("GetAccessToken response is not an object");
                                }
                            } else {
-                               log_error("GetAccessToken failed, error: " + error);
+                               log_error("GetAccessToken failed, error: " + error + ", response: " + response);
                            }
                        });
 }

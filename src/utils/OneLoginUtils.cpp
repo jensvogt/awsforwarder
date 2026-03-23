@@ -54,7 +54,7 @@ void OneLoginUtils::GetSamlAssertion(const QString &host, const QString &awsAcco
     samlRequest.subDomain = _subDomain;
 
     QMap<QString, QString> samlHeaders;
-    samlHeaders["Authorization"] = "bearer:" + accessTokenResponse.accessToken;
+    samlHeaders["Authorization"] = "Bearer: " + accessTokenResponse.accessToken;
     samlHeaders["Content-Type"] = "application/json";
     _oneloginService->GetSamlResponse(host, "/api/2/saml_assertion", samlRequest.ToJson(), samlHeaders);
     connect(_oneloginService, &OneLoginService::GetSamlAssertionSignal, this, [this, awsAccount, accessTokenResponse, host](const SamlAssertionResponse &samlResponse) {
