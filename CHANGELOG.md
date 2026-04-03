@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.8.1](https://github.com/jensvogt/awsforwarder/compare/v1.8.0...v1.8.1) (2026-04-03)
+
+
+### Bug Fixes
+
+* **PIM-1234:** fix copy paste from details ([375d361](https://github.com/jensvogt/awsforwarder/commit/375d361d7d51e47460ea668b748134d28c7da1f0))
+* **PIM-1234:** fix copy paste from details ([1e6e0aa](https://github.com/jensvogt/awsforwarder/commit/1e6e0aa6332f1d4a5ee8eac8df1a2b9d31dc80a2))
+
 ## [1.8.0](https://github.com/jensvogt/awsforwarder/compare/v1.7.2...v1.8.0) (2026-02-09)
 
 
