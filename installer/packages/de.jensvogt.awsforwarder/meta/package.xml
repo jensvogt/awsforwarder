@@ -2,8 +2,8 @@
 <Package>
     <DisplayName>AwsForwarder</DisplayName>
     <Description>AwsForwarder</Description>
-    <Version>1.7.0</Version>
-    <ReleaseDate>2026-02-09 13:50:02</ReleaseDate>
+    <Version>1.7.1</Version>
+    <ReleaseDate>2026-04-03 18:31:21</ReleaseDate>
     <Default>true</Default>
     <Script>installscript.qs</Script>
     <RequiresAdminRights>true</RequiresAdminRights>

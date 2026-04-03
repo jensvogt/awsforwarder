@@ -467,7 +467,7 @@ jobs:
           cp ./artifacts/rpm-package-linux/*.rpm public/ || true
           cp -r ./artifacts/repository/* public/ || true
           cp .github/pages/index.html public/index.html || true
-          find . -ls
+          cp ./version.txt public/version.txt || true
 
       - name: Generate files.json
         run: |
