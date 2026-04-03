@@ -80,7 +80,11 @@ Pod KubernetesUtils::CreatePodDto(const QString &nameSpace, const QString &podNa
     for (QVector<ForwarderConfig> forwarders = Configuration::instance().GetForwarderConfigs(nameSpace); const auto &forwarder: forwarders) {
         Environment envVar;
         envVar.name = QString("PORT_%1").arg(forwarder.remotePort);
-        envVar.value = QString("%1:%2-%3.%4:%5").arg(forwarder.localPort).arg(nameSpace, forwarder.name, forwarder.cluster).arg(forwarder.clusterPort);
+        if (forwarder.name == "opensearch") {
+            envVar.value = QString("%1:%2:%3").arg(forwarder.localPort).arg(forwarder.cluster).arg(forwarder.clusterPort);
+        } else {
+            envVar.value = QString("%1:%2-%3.%4:%5").arg(forwarder.localPort).arg(nameSpace, forwarder.name, forwarder.cluster).arg(forwarder.clusterPort);
+        }
         container.envVars.emplace_back(envVar);
     }
 

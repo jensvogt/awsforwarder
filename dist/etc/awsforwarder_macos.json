@@ -161,8 +161,8 @@
       {
         "active": true,
         "awsAccount": "",
-        "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com",
-        "clusterPort": 80,
+        "cluster": "vpc-pim-dev-protokollierung-es-m74mh3tqnstktew4dafqphbvjq.eu-central-1.es.amazonaws.com",
+        "clusterPort": 443,
         "expires": "",
         "last-started": "",
         "localPort": 10080,
@@ -323,8 +323,8 @@
       {
         "active": true,
         "awsAccount": "",
-        "cluster": "cluster-cevugimly6tg.eu-central-1.rds.amazonaws.com",
-        "clusterPort": 80,
+        "cluster": "vpc-pim-int-es-protokollierung-fopvgdkq4tew22bv4gqynnhity.eu-central-1.es.amazonaws.com",
+        "clusterPort": 443,
         "expires": "",
         "last-started": "",
         "localPort": 10180,
@@ -485,8 +485,8 @@
       {
         "active": true,
         "awsAccount": "",
-        "cluster": "cluster-chx4vyuv4cxe.eu-central-1.rds.amazonaws.com",
-        "clusterPort": 80,
+        "cluster": "vpc-pim-prod-protokollierung-es-wmy6icvorbdrxh4uur42vdz4hq.eu-central-1.es.amazonaws.com",
+        "clusterPort": 443,
         "expires": "2026-01-25T21:13:39",
         "last-started": "2026-01-25T11:13:39",
         "localPort": 10280,

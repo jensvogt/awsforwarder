@@ -66,7 +66,7 @@ MainWidget::~MainWidget() {
 void MainWidget::SetupDevTable() {
 
     const QStringList headers = QStringList() = {
-                                    tr("Service"), tr("Cluster"), tr("Last Started"), tr("Expired")
+                                    tr("Service"), tr("Cluster"), tr("Local Port"), tr("Remote Port"), tr("Last Started"), tr("Expired")
                                 };
 
     _devDataModel = new QStandardItemModel(this);
@@ -84,6 +84,8 @@ void MainWidget::SetupDevTable() {
     _ui->devTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
     _ui->devTableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
     _ui->devTableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
+    _ui->devTableView->horizontalHeader()->setSectionResizeMode(4, QHeaderView::ResizeToContents);
+    _ui->devTableView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::ResizeToContents);
     _ui->devTableView->addAction(GetRefreshAction(this));
 
     // Connect double-click
@@ -104,7 +106,7 @@ void MainWidget::SetupDevTable() {
 void MainWidget::SetupIntTable() {
 
     const QStringList headers = QStringList() = {
-                                    tr("Service"), tr("Cluster"), tr("Last Started"), tr("Expired")
+                                    tr("Service"), tr("Cluster"), tr("Local Port"), tr("Remote Port"), tr("Last Started"), tr("Expired")
                                 };
 
     _intDataModel = new QStandardItemModel(this);
@@ -122,6 +124,8 @@ void MainWidget::SetupIntTable() {
     _ui->intTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
     _ui->intTableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
     _ui->intTableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
+    _ui->intTableView->horizontalHeader()->setSectionResizeMode(4, QHeaderView::ResizeToContents);
+    _ui->intTableView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::ResizeToContents);
     _ui->intTableView->addAction(GetRefreshAction(this));
 
     // Connect double-click
@@ -142,7 +146,7 @@ void MainWidget::SetupIntTable() {
 void MainWidget::SetupProdTable() {
 
     const QStringList headers = QStringList() = {
-                                    tr("Service"), tr("Cluster"), tr("Last Started"), tr("Expired")
+                                    tr("Service"), tr("Cluster"), tr("Local Port"), tr("Remote Port"), tr("Last Started"), tr("Expired")
                                 };
 
     _prodDataModel = new QStandardItemModel(this);
@@ -160,6 +164,8 @@ void MainWidget::SetupProdTable() {
     _ui->prodTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
     _ui->prodTableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
     _ui->prodTableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
+    _ui->prodTableView->horizontalHeader()->setSectionResizeMode(4, QHeaderView::ResizeToContents);
+    _ui->prodTableView->horizontalHeader()->setSectionResizeMode(5, QHeaderView::ResizeToContents);
     _ui->prodTableView->addAction(GetRefreshAction(this));
 
     // Connect double-click
@@ -187,8 +193,10 @@ void MainWidget::LoadContent() {
         for (const auto &config: Configuration::instance().GetForwarderConfigs("pim-dev")) {
             SetColumn(_devDataModel, r, 0, config.name);
             SetColumn(_devDataModel, r, 1, config.cluster);
-            SetColumn(_devDataModel, r, 2, config.lastStarted.toString("yyyy-MM-dd HH:mm:ss"));
-            SetColumn(_devDataModel, r, 3, config.expires.toString("yyyy-MM-dd HH:mm:ss"));
+            SetColumn(_devDataModel, r, 2, QString::number(config.localPort));
+            SetColumn(_devDataModel, r, 3, QString::number(config.remotePort));
+            SetColumn(_devDataModel, r, 4, config.lastStarted.toString("yyyy-MM-dd HH:mm:ss"));
+            SetColumn(_devDataModel, r, 5, config.expires.toString("yyyy-MM-dd HH:mm:ss"));
             r++;
         }
         _ui->devTableView->setSortingEnabled(true);
@@ -201,8 +209,10 @@ void MainWidget::LoadContent() {
         for (const auto &config: Configuration::instance().GetForwarderConfigs("pim-int")) {
             SetColumn(_intDataModel, r, 0, config.name);
             SetColumn(_intDataModel, r, 1, config.cluster);
-            SetColumn(_intDataModel, r, 2, config.lastStarted.toString("yyyy-MM-dd HH:mm:ss"));
-            SetColumn(_intDataModel, r, 3, config.expires.toString("yyyy-MM-dd HH:mm:ss"));
+            SetColumn(_intDataModel, r, 2, QString::number(config.localPort));
+            SetColumn(_intDataModel, r, 3, QString::number(config.remotePort));
+            SetColumn(_intDataModel, r, 4, config.lastStarted.toString("yyyy-MM-dd HH:mm:ss"));
+            SetColumn(_intDataModel, r, 5, config.expires.toString("yyyy-MM-dd HH:mm:ss"));
             r++;
         }
         _ui->intTableView->setSortingEnabled(true);
@@ -215,8 +225,10 @@ void MainWidget::LoadContent() {
         for (const auto &config: Configuration::instance().GetForwarderConfigs("pim-prod")) {
             SetColumn(_prodDataModel, r, 0, config.name);
             SetColumn(_prodDataModel, r, 1, config.cluster);
-            SetColumn(_prodDataModel, r, 2, config.lastStarted.toString("yyyy-MM-dd HH:mm:ss"));
-            SetColumn(_prodDataModel, r, 3, config.expires.toString("yyyy-MM-dd HH:mm:ss"));
+            SetColumn(_prodDataModel, r, 2, QString::number(config.localPort));
+            SetColumn(_prodDataModel, r, 3, QString::number(config.remotePort));
+            SetColumn(_prodDataModel, r, 4, config.lastStarted.toString("yyyy-MM-dd HH:mm:ss"));
+            SetColumn(_prodDataModel, r, 5, config.expires.toString("yyyy-MM-dd HH:mm:ss"));
             r++;
         }
         _ui->prodTableView->setSortingEnabled(true);

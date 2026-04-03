@@ -3,7 +3,7 @@
     <DisplayName>AwsForwarder</DisplayName>
     <Description>AwsForwarder</Description>
     <Version>1.8.0</Version>
-    <ReleaseDate>2026-03-23 17:54:20</ReleaseDate>
+    <ReleaseDate>2026-03-30 13:10:33</ReleaseDate>
     <Default>true</Default>
     <Script>installscript.qs</Script>
     <RequiresAdminRights>true</RequiresAdminRights>
